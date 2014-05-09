@@ -1,6 +1,6 @@
 A Clamo API client, for use from node.js and within the browser.
 
-Usage :-
+## Usage
 
 The latest 10 posts,
 
