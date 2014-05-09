@@ -1,0 +1,36 @@
+{
+  "name": "fastft-api-client",
+  "version": "0.1.0",
+  "repository": {
+      "type": "git",
+      "url": "https://github.com/Financial-Times/fastt-api-client.git"
+  },
+  "license": "MIT",
+  "description": "A client for the Financial Times FastFT content and search APIs",
+  "main": "./api.js",
+  "directories": {
+    "lib": "./lib"
+  },
+  "dependencies": {
+      "superagent": "*",
+      "lodash": "*",
+      "q": "*"
+  },
+  "devDependencies": {
+        "jshint": "2.5.0",
+        "browserify": "*",
+        "karma": "0.12.9",
+        "karma-jasmine": "~0.2.0",
+        "karma-phantomjs-launcher": "^0.1.4",
+        "karma-chrome-launcher": "*",
+        "phantomjs": "*",
+        "uglify-js": "*"
+  },
+  "keywords": [
+    "FT"
+  ],
+  "contributors": [{
+    "name": "Matt Chadburn",
+    "email": "matt.chadburn@ft.com"
+  }]
+}
