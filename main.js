@@ -1,3 +1,3 @@
-var Clamo = require('./lib/clamo')
+var Clamo = require('./src/clamo')
 
 module.exports = Clamo;
