@@ -10,7 +10,6 @@ var Clamo = function () {
     
     var promiseOfClamo = function (url, params) {
         var deferred = Q.defer();
-        console.log(params);
         request
             .get(url, { request: JSON.stringify([params]) })
             .end(function (res) {
@@ -21,12 +20,16 @@ var Clamo = function () {
 
     /** API */
 
-    this.search = function (params) {
-        return promiseOfClamo(host, {});
+    this.search = function (query) {
+        var params = { 
+            action: 'search',
+            arguments: { 'query': query }
+        }
+        return promiseOfClamo(host, params);
     } 
     
     // http://clamo/api?request=[{%22action%22:%22getPost%22,%22arguments%22:{%22id%22:%22147292%22}}]
-    this.getPost = function (postId, params) {
+    this.getPost = function (postId) {
         var params = {
             action: 'getPost',
             arguments: { 'id': postId }
