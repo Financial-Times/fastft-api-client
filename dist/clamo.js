@@ -3401,13 +3401,16 @@ var Clamo = function () {
     var host = '/', 
         offset = 0
         limit = 10;
-   
+    
     // 
     var promiseOfClamo = function (url, params) {
         var deferred = Q.defer();
         request
             .post(url)
-            .send('request='+JSON.stringify([params]))
+            .type('form')
+            .send({
+                request: JSON.stringify([params])
+            })
             .end(function (err, res) {
                 if (err) {
                     deferred.reject(new Error(err));

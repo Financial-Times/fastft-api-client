@@ -15,7 +15,10 @@ var Clamo = function () {
         var deferred = Q.defer();
         request
             .post(url)
-            .send('request='+JSON.stringify([params]))
+            .type('form')
+            .send({
+                request: JSON.stringify([params])
+            })
             .end(function (err, res) {
                 if (err) {
                     deferred.reject(new Error(err));
