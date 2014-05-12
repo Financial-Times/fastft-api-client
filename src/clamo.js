@@ -6,12 +6,17 @@ var request = require('superagent');
 // 
 var Clamo = function () {
     
-    var host = '/';
+    var host = '/', 
+        offset = 0
+        limit = 0;
     
     var promiseOfClamo = function (url, params) {
         var deferred = Q.defer();
+        console.log('a promise');
         request
-            .get(url, { request: JSON.stringify([params]) })
+            .get(url, { 
+                request: JSON.stringify([params]) 
+            })
             .end(function (res) {
                 return deferred.resolve(res);
             });
@@ -20,15 +25,18 @@ var Clamo = function () {
 
     /** API */
 
-    this.search = function (query) {
+    this.search = function (query, p) {
         var params = { 
             action: 'search',
-            arguments: { 'query': query }
+            arguments: { 
+                'query': query, 
+                'limit': p.limit || limit, 
+                'offset': p.offset || offset 
+            }
         }
         return promiseOfClamo(host, params);
     } 
     
-    // http://clamo/api?request=[{%22action%22:%22getPost%22,%22arguments%22:{%22id%22:%22147292%22}}]
     this.getPost = function (postId) {
         var params = {
             action: 'getPost',
@@ -43,5 +51,5 @@ var clamo = new Clamo();
 
 module.exports = {
     search: clamo.search, 
-    getPost: clamo.getPost 
+    getPost: clamo.getPost
 }

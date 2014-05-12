@@ -1,4 +1,4 @@
-A Clamo API client, for use from node.js and within the browser.
+A Clamo (AKA. fastFT) API client, for use from node.js and within the browser.
 
 ## Usage
 
@@ -6,9 +6,9 @@ The latest 10 posts,
 
 ```
 Clamo
-.search()
+.search('location: London')
 .then(function (results) {
-    console.log(results)
+    ...
 })
 ```
 
@@ -18,7 +18,7 @@ An individual post,
 Clamo
 .getPost(147292)
 .then(function (results) {
-    console.log(results)
+    ...
 })
 ```
 
@@ -30,4 +30,14 @@ Clamo
  .then(fn)
  .catch(fn)
  .done(fn)
+```
+
+It's also possible to page through the search results with the offset & limit parameters,
+
+```
+Clamo
+.search('location: London', { offset: 7, limit: 20 })
+.then(function (results) {
+    ...
+})
 ```
