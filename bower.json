@@ -1,0 +1,9 @@
+{
+  "name": "fastft-api-client",
+  "version": "0.1.0",
+  "main": "dist/fastft-api-clien.min.js",
+  "dependencies": {
+    "superagent": "0.18.0",
+    "q": "1.0.1"
+  }
+}
