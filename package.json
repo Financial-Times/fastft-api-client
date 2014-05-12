@@ -1,13 +1,13 @@
 {
   "name": "fastft-api-client",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "repository": {
       "type": "git",
       "url": "https://github.com/Financial-Times/fastt-api-client.git"
   },
   "license": "MIT",
   "description": "A client for the Financial Times FastFT content and search APIs",
-  "main": "./api.js",
+  "main": "./main.js",
   "directories": {
     "lib": "./lib"
   },
