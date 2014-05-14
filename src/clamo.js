@@ -7,13 +7,17 @@ var request = require('superagent');
 var Clamo = function () {
     
     var opts = opts || {},
+        httpTimeout = 2000,
         offset = 0,
         limit = 10,
         outputfields = {
             id: true,
             title: true,
             content: 'html',
+            abstract: 'html',
             datepublished: true,
+            shorturl: true,
+            metadata: true,
             tags: 'visibleonly',
             authorpseudonym: 'true'
         }
@@ -34,7 +38,7 @@ var Clamo = function () {
         request
             .post(url)
             .type('form')
-            .timeout(2000) // 2 seconds or die - config?
+            .timeout(httpTimeout)
             .send({
                 request: JSON.stringify([params])
             })
