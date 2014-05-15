@@ -1,6 +1,6 @@
 {
   "name": "fastft-api-client",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "main": "dist/fastft-api-clien.min.js",
   "dependencies": {
     "superagent": "0.18.0",
