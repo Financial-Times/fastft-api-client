@@ -22,9 +22,9 @@
         "karma": "0.12.9",
         "karma-jasmine": "~0.2.0",
         "karma-phantomjs-launcher": "^0.1.4",
-        "karma-chrome-launcher": "*",
-        "phantomjs": "*",
-        "uglify-js": "*"
+        "karma-chrome-launcher": "^0.1.3",
+        "phantomjs": "^1.9.*",
+        "uglify-js": "^2.4.*"
   },
   "keywords": [
     "FT"

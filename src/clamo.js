@@ -33,7 +33,7 @@ var Clamo = function () {
     var promiseOfClamo = function (url, params) {
         var deferred = Q.defer();
 
-        console.log(url, JSON.stringify([params]));
+        // console.log(url, JSON.stringify([params]));
 
         request
             .post(url)

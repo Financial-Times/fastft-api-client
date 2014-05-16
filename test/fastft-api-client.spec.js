@@ -2,55 +2,74 @@
 
 var Clamo = require('./../main'); 
 
+var fixtures = 
+    {
+        getPost: '[{ "status": "ok", "data": { "id": 147292, "title": "RBS stands ..." } }]'
+    }
+
 describe('Clamo', function() {
 
 	"use strict";
 
 	beforeEach(function() {
-        // ...
-	});
+	     jasmine.Ajax.install();
+    });
+	
+    afterEach(function() {
+	     jasmine.Ajax.uninstall();
+    });
 
 	describe("Clamo", function () {
 		
 		it('should exist', function() {
 			expect(Clamo).toBeDefined();
 		});
-	
-        describe("search", function () {
+            
+        describe("client", function () {
+            it('should query Clamo API', function(done) {
+                jasmine.Ajax.stubRequest('http://clamo.com/api')
+                Clamo
+                    .withHost('http://clamo.com/api')
+                    .getPost(12345)
+                    .then(function () {
+                        var request = jasmine.Ajax.requests.mostRecent();
+                        
+                        expect(request.url).toBe('http://clamo.com/api');
+                        expect(request.method).toBe('POST');
 
-            xit('should return a promise of a search result', function() {
-                expect(Clamo.search('location: London').done(
-                    function (res) {
-                        console.log(res);
-                    } 
-                )).toBe('');
+                        var postBody = JSON.parse(request.data().request[0])[0]; 
+                        expect(postBody.action).toBe('getPost');
+                        expect(postBody.arguments.id).toBe(12345);
+                        done();
+                    }
+                )
             });
-            
-            xit('should return a list of search results', function() {
-                expect(Clamo.search('location: London')).toBeDefined();
-            });
-            
-            xit('should catch errors returned by the service', function() {
-                expect(Clamo.search('location: xxx')).toBeDefined();
-            });
-            
-            xit('should page through the results', function() {
-                expect(Clamo.search('location: xxx', {
-                    limit: 3,
-                    offset: 12
-                })).toBeDefined();
-            });
+        });
+	
+        it('should catch errors returned by the service', function() { });
         
+        describe(".search", function () {
+            it('should return a list of search results', function() { });
         });
         
-        describe("getPosts", function () {
-
-            it('success', function() {
-                expect(Clamo.getPost(43463)).toBeDefined();
+        describe(".getPost", function () {
+            
+            it('retrieve a given post', function(done) {
+                jasmine.Ajax.stubRequest('http://clamo.com/api').andReturn({
+                    status: 200,
+                    responseText: fixtures.getPost,
+                    ok: true
+                })
+                Clamo
+                    .withHost('http://clamo.com/api')
+                    .getPost(147292)
+                    .then(function (res) {
+                        expect(JSON.parse(res.text)[0].data.id).toBe(147292);
+                        done();
+                    }
+                )
             });
             
         });	    
-
 	});
-
 });
