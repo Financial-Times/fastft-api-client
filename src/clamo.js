@@ -31,7 +31,9 @@ var Clamo = function () {
      * Returns a promise of a HTTP request to the Clamo API
      */
     var promiseOfClamo = function (url, params) {
+        
         var deferred = Q.defer();
+        var requestStart = new Date();
 
         // console.log(url, JSON.stringify([params]));
 
@@ -46,6 +48,7 @@ var Clamo = function () {
                 if (err) {
                     deferred.reject(new Error(err));
                 }
+                res['latency'] = new Date() - requestStart;
                 return deferred.resolve(res);
             });
         return deferred.promise;

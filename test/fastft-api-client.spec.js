@@ -26,6 +26,9 @@ describe('Clamo', function() {
 		});
             
         describe("client", function () {
+ 
+            // clamo is particular about what it receives, so this test sanity
+            // checks the request from fastft-api-client -> clamo
             it('should query Clamo API', function(done) {
                 jasmine.Ajax.stubRequest('http://clamo.com/api')
                 Clamo
@@ -44,6 +47,20 @@ describe('Clamo', function() {
                     }
                 )
             });
+
+            it('should time the request latency', function(done) {
+                jasmine.Ajax.stubRequest('http://clamo.com/api')
+                Clamo
+                    .withHost('http://clamo.com/api')
+                    .getPost(12345)
+                    .then(function (res) {
+                        var request = jasmine.Ajax.requests.mostRecent();
+                        expect(res.latency).toMatch(/^\d+$/);
+                        done();
+                    }
+                )
+            });
+
         });
 	
         it('should catch errors returned by the service', function() { });
@@ -63,7 +80,8 @@ describe('Clamo', function() {
                 Clamo
                     .withHost('http://clamo.com/api')
                     .getPost(147292)
-                    .then(function (res) {
+                    .then(function (res, a) {
+                        debugger;
                         expect(JSON.parse(res.text)[0].data.id).toBe(147292);
                         done();
                     }
