@@ -1,6 +1,6 @@
 {
   "name": "fastft-api-client",
-  "version": "0.1.5",
+  "version": "0.1.6",
   "main": "dist/clamo.min.js",
   "dependencies": {
     "superagent": "0.18.0",
