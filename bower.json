@@ -3,7 +3,7 @@
   "version": "0.1.5",
   "main": "dist/clamo.min.js",
   "dependencies": {
-    "superagent": "0.18.0",
+    "superagent": "https://github.com/Financial-Times/superagent#bower-redux",
     "q": "1.0.1"
   }
 }
