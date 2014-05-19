@@ -14,7 +14,10 @@
   "dependencies": {
       "superagent": "*",
       "lodash": "*",
-      "q": "*"
+      "superagent-promises": "git+https://github.com/wheresrhys/superagent-promises.git"
+  },
+  "peerDependencies": {
+    "es6-promise": "*"
   },
   "devDependencies": {
         "jshint": "2.5.0",
