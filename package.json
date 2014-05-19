@@ -14,8 +14,10 @@
   "dependencies": {
       "superagent": "*",
       "lodash": "*",
-      "superagent-promises": "git+https://github.com/wheresrhys/superagent-promises.git"
+      "superagent-promises": "https://github.com/wheresrhys/superagent-promises/archive/master.tar.gz"
+
   },
+
   "peerDependencies": {
     "es6-promise": "*"
   },
