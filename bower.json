@@ -4,6 +4,6 @@
   "main": "main.js",
   "dependencies": {
     "superagent": "https://github.com/Financial-Times/superagent.git#bower",
-    "q": "1.0.1"
+    "superagent-promises": "https://github.com/wheresrhys/superagent-promises.git"
   }
 }

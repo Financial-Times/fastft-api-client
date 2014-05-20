@@ -12,9 +12,12 @@
     "lib": "./lib"
   },
   "dependencies": {
-      "superagent": "*",
-      "lodash": "*",
-      "q": "*"
+      "superagent": "https://github.com/Financial-Times/superagent/archive/bower.tar.gz",
+      "superagent-promises": "https://github.com/wheresrhys/superagent-promises/archive/master.tar.gz"
+  },
+
+  "peerDependencies": {
+    "es6-promise": "*"
   },
   "devDependencies": {
         "jshint": "2.5.0",

@@ -1,7 +1,7 @@
 
 var request = require('superagent');
-    Q = require('q'),
-    querystring = require('querystring');
+var querystring = require('querystring');
+var superPromise = require('superagent-promises');
 
 // 
 var Clamo = function () {
@@ -25,31 +25,22 @@ var Clamo = function () {
     this.setHost = function (h) {
         host = h;
         return this;
-    }
+    };
 
     /**
      * Returns a promise of a HTTP request to the Clamo API
      */
     var promiseOfClamo = function (url, params) {
-        var deferred = Q.defer();
-
-        // console.log(url, JSON.stringify([params]));
-
-        request
+        return request
             .post(url)
             .type('form')
             .timeout(httpTimeout)
+            .use(superPromise)
             .send({
                 request: JSON.stringify([params])
             })
-            .end(function (err, res) {
-                if (err) {
-                    deferred.reject(new Error(err));
-                }
-                return deferred.resolve(res);
-            });
-        return deferred.promise;
-    }
+            .end();
+    };
 
     /** API */
 
@@ -67,7 +58,7 @@ var Clamo = function () {
             }
         }
         return promiseOfClamo(host, params);
-    } 
+    };
    
     /**
      * Retrieves a single post from a Clamo post id
@@ -81,9 +72,9 @@ var Clamo = function () {
             }
         }
         return promiseOfClamo(host, params);
-    } 
+    }; 
 
-}
+};
 
 var clamo = new Clamo();
 
@@ -91,4 +82,4 @@ module.exports = {
     search: clamo.search, 
     getPost: clamo.getPost,
     withHost: clamo.setHost 
-}
+};
