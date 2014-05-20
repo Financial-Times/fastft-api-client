@@ -13,7 +13,6 @@
   },
   "dependencies": {
       "superagent": "*",
-      "lodash": "*",
       "superagent-promises": "https://github.com/wheresrhys/superagent-promises/archive/master.tar.gz"
   },
 
