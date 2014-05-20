@@ -12,7 +12,7 @@
     "lib": "./lib"
   },
   "dependencies": {
-      "superagent": "*",
+      "superagent": "https://github.com/Financial-Times/superagent/archive/bower.tar.gz",
       "superagent-promises": "https://github.com/wheresrhys/superagent-promises/archive/master.tar.gz"
   },
 

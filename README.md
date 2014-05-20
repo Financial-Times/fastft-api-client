@@ -10,7 +10,7 @@ This module depends on es6 Promises being available as a global. At present this
 
 Then at the start of your application code
 
-    GLOBAL.Promise = require('es6-promise').Promise();
+    GLOBAL.Promise = require('es6-promise').Promise;
 
 
 ### Browser
