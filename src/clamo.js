@@ -39,12 +39,7 @@ var Clamo = function () {
             .send({
                 request: JSON.stringify([params])
             })
-            .end(function (err, res) {
-                if (err) {
-                    deferred.reject(new Error(err));
-                }
-                return deferred.resolve(res);
-            });
+            .end();
     };
 
     /** API */
