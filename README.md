@@ -12,42 +12,49 @@ Then at the start of your application code
 
     GLOBAL.Promise = require('es6-promise').Promise;
 
-
 ### Browser
 
 Include the [es6-promise-polyfill](http://s3.amazonaws.com/es6-promises/promise-1.0.0.min.js) in the head of your page
 
-## Usage
+## API
 
-The latest 10 posts,
+### setHost (str)
 
-```
-Clamo
-  .withHost('xxx.clamo.ft.com')
-  .search('location: London')
-  .then(function (results) {
-    ...
-  })
-```
+Sets the host name for requests to clamo (may contain `http://` etc if your environment requires it)
 
-An individual post,
+### getPost (id)
 
-```
-Clamo
-  .withHost('xxx.clamo.ft.com')
-  .getPost(147292)
-  .then(function (results) {
-    ...
-  })
-```
+Retrieves a single post from clamo. Returns a promise for an object with two properties
 
-It's also possible to page through the search results with the offset & limit parameters,
+ * `response` : The XHR response object received
+ * `post`: An instance of a `Post` model (see below for details) 
 
-```
-Clamo
-  .withHost('xxx.clamo.ft.com')
-  .search('location: London', { offset: 7, limit: 20 })
-  .then(function (results) {
-    ...
-  })
-```
+### search (query, params)
+
+Retrieves posts matching the given query, ordered by most recent first. Accepts two parameters
+
+ * `query`: A string conforming to clamo's query syntax e.g. `location: London`. Defaults to ''
+ * `params`: An object containing two properties - `limit` and `offset` - which enable pagination of results. `limit` defaults to 10 and `offset` to 0
+
+Returns a promise for an object with two properties
+
+ * `response` : The XHR response object received
+ * `posts`: An array of instances of the `Post` model (see below for details) 
+
+### Post model
+
+Exposed as a property on the object exported by this module. This contains utilties for accessing properties of a given post. *Exact structure to be determined*
+
+## Tests
+
+To run tests locally run
+
+    npm install; bower install; make test
+
+To debug tests in the browser run
+
+    ./node_modules/karma/bin/karma start --browsers Chrome --singleRun false
+
+(Note you will have to run `make testRebuild` too every time you change a file. If you have `karma-cli` installed globally you can use `karma` instead of `./node_modules/karma/bin/karma`)
+
+

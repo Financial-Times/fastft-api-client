@@ -102,5 +102,6 @@ module.exports = {
     getPost: clamo.getPost,
     setHost: function (h) {
         host = h;
-    }
+    },
+    Post: Post
 };
