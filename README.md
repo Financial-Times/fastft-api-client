@@ -49,7 +49,7 @@ Exposed as a property on the object exported by this module. This contains utilt
 
 As well as searching for raw strings clamo will use the foloowing to query a post's metadata
 
-* 'author: name' REstrict by author name
+* 'author: name' Restrict by author name
 * 'from:date' No earlier than date (dd/mm/YYYY)
 * 'to:date' No later than date (dd/mm/YYYY)
 * 'status: status' Either 'live' or 'draft'
@@ -57,7 +57,7 @@ As well as searching for raw strings clamo will use the foloowing to query a pos
 
 Use `AND`, `OR`, `NOT`, `(` and `)` to construct complex search terms
 
-e.g. `bananas AND from: 01/12/2013 AND NOT location: Americas`
+e.g. `bananas AND from: "01/12/2013" AND NOT location: "Americas"`
 
 ## Tests
 
