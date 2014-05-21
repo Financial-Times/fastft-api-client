@@ -45,6 +45,20 @@ Returns a promise for an object with two properties
 
 Exposed as a property on the object exported by this module. This contains utilties for accessing properties of a given post. *Exact structure to be determined*
 
+### Clamo search syntax
+
+As well as searching for raw strings clamo will use the foloowing to query a post's metadata
+
+* 'author: name' REstrict by author name
+* 'from:date' No earlier than date (dd/mm/YYYY)
+* 'to:date' No later than date (dd/mm/YYYY)
+* 'status: status' Either 'live' or 'draft'
+* '*taxonomy: tag*' Tagged with a tag from a given taxonomy
+
+Use `AND`, `OR`, `NOT`, `(` and `)` to construct complex search terms
+
+e.g. `bananas AND from: 01/12/2013 AND NOT location: Americas`
+
 ## Tests
 
 To run tests locally run
