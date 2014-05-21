@@ -1,6 +1,5 @@
 {
   "name": "fastft-api-client",
-  "version": "0.1.5",
   "main": "main.js",
   "dependencies": {
     "superagent": "https://github.com/Financial-Times/superagent.git#bower",
