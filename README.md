@@ -1,4 +1,4 @@
-A Clamo (Athe browser.
+A fastft posts client for the browser or node.js
 
 ## Promises
 
