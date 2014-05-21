@@ -1,9 +1,9 @@
 
 var request = require('superagent');
-var querystring = require('querystring');
 var superPromise = require('superagent-promises');
+var Post  = require('./models/post');
+var host;
 
-// 
 var Clamo = function () {
     
     var opts = opts || {},
@@ -20,19 +20,17 @@ var Clamo = function () {
             metadata: true,
             tags: 'visibleonly',
             authorpseudonym: 'true'
-        }
-   
-    this.setHost = function (h) {
-        host = h;
-        return this;
-    };
+        };
 
     /**
      * Returns a promise of a HTTP request to the Clamo API
      */
-    var promiseOfClamo = function (url, params) {
+    var promiseOfClamo = function (params) {
+        if (!host) {
+            throw 'No host specified for clamo api calls';
+        }
         return request
-            .post(url)
+            .post(host)
             .type('form')
             .timeout(httpTimeout)
             .use(superPromise)
@@ -48,16 +46,28 @@ var Clamo = function () {
      * Retrieves a sequence of posts from Clamo  
      */
     this.search = function (query, p) { // TODO p is optional
-        var params = { 
+        p = p || {};
+        var params = {
             action: 'search',
-            arguments: { 
-                'query': query, 
-                'limit': p.limit || limit, 
-                'offset': p.offset || offset,
-                'outputfields': outputfields
+            arguments: {
+                query: query || '',
+                limit: p.limit || limit,
+                offset: p.offset || offset,
+                outputfields: outputfields
             }
-        }
-        return promiseOfClamo(host, params);
+        };
+        return promiseOfClamo(params).then(function (response) {
+            return {
+                response: response,
+                posts: JSON.parse(response.text).map(function (results) {
+                    return results.data.results.map(function (result) {
+                        return new Post().parse(result);
+                    });
+                })[0]
+            };
+        }).catch(function (err) {
+            console.log('Failed clamo search: ', query, p, err);
+        });
     };
    
     /**
@@ -70,16 +80,28 @@ var Clamo = function () {
                 'id': postId,
                 'outputfields': outputfields
             }
-        }
-        return promiseOfClamo(host, params);
-    }; 
+        };
+        return promiseOfClamo(params).then(function (response) {
+            return {
+                response: response,
+                post: JSON.parse(response.text).map(function (result) {
+                    return new Post().parse(result.data);
+                })[0]
+            };
+        }).catch(function (err) {
+            console.log('Failed clamo post fetch: ', postId, err);
+        });
+    };
 
 };
 
 var clamo = new Clamo();
 
 module.exports = {
-    search: clamo.search, 
+    search: clamo.search,
     getPost: clamo.getPost,
-    withHost: clamo.setHost 
+    setHost: function (h) {
+        host = h;
+    },
+    Post: Post
 };

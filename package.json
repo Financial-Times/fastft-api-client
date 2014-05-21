@@ -1,9 +1,9 @@
 {
   "name": "fastft-api-client",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "repository": {
-      "type": "git",
-      "url": "https://github.com/Financial-Times/fastt-api-client.git"
+    "type": "git",
+    "url": "https://github.com/Financial-Times/fastt-api-client.git"
   },
   "license": "MIT",
   "description": "A client for the Financial Times FastFT content and search APIs",
@@ -12,28 +12,35 @@
     "lib": "./lib"
   },
   "dependencies": {
-      "superagent": "https://github.com/Financial-Times/superagent/archive/bower.tar.gz",
-      "superagent-promises": "https://github.com/wheresrhys/superagent-promises/archive/master.tar.gz"
+    "superagent": "https://github.com/Financial-Times/superagent/archive/bower.tar.gz",
+    "superagent-promises": "https://github.com/wheresrhys/superagent-promises/archive/master.tar.gz",
+    "o-date": "https://github.com/Financial-Times/o-date/archive/0.4.0.tar.gz",
+    "debowerify": "~0.7.1"
   },
-
   "peerDependencies": {
     "es6-promise": "*"
   },
   "devDependencies": {
-        "jshint": "2.5.0",
-        "browserify": "*",
-        "karma": "0.12.9",
-        "karma-jasmine": "~0.2.0",
-        "karma-phantomjs-launcher": "^0.1.4",
-        "karma-chrome-launcher": "^0.1.3",
-        "phantomjs": "^1.9.*",
-        "uglify-js": "^2.4.*"
+    "jshint": "2.5.0",
+    "browserify": "*",
+    "karma": "0.12.9",
+    "karma-jasmine": "~0.2.0",
+    "karma-phantomjs-launcher": "^0.1.4",
+    "karma-chrome-launcher": "^0.1.3",
+    "phantomjs": "^1.9.*",
+    "uglify-js": "^2.4.*"
   },
   "keywords": [
     "FT"
   ],
-  "contributors": [{
-    "name": "Matt Chadburn",
-    "email": "matt.chadburn@ft.com"
-  }]
+  "contributors": [
+    {
+      "name": "Matt Chadburn",
+      "email": "matt.chadburn@ft.com"
+    },
+    {
+      "name": "Rhys Evans",
+      "email": "rhys.evans@ft.com"
+    }
+  ]
 }
