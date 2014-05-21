@@ -1,7 +1,7 @@
 
 var request = require('superagent');
 var superPromise = require('superagent-promises');
-var Post  = require('./post-model');
+var Post  = require('./models/post');
 var host;
 
 var Clamo = function () {

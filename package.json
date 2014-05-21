@@ -1,6 +1,6 @@
 {
   "name": "fastft-api-client",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "repository": {
     "type": "git",
     "url": "https://github.com/Financial-Times/fastt-api-client.git"
@@ -37,6 +37,10 @@
     {
       "name": "Matt Chadburn",
       "email": "matt.chadburn@ft.com"
+    },
+    {
+      "name": "Rhys Evans",
+      "email": "rhys.evans@ft.com"
     }
   ]
 }
