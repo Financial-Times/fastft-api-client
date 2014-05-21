@@ -4,6 +4,7 @@
   "main": "main.js",
   "dependencies": {
     "superagent": "https://github.com/Financial-Times/superagent.git#bower",
-    "superagent-promises": "https://github.com/wheresrhys/superagent-promises.git"
+    "superagent-promises": "https://github.com/wheresrhys/superagent-promises.git",
+    "o-date": "~0.4.2"
   }
 }
