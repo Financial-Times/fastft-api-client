@@ -1,6 +1,6 @@
 {
   "name": "fastft-api-client",
-  "version": "0.3.1",
+  "version": "0.3.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/Financial-Times/fastt-api-client.git"
