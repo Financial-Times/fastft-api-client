@@ -6,10 +6,10 @@ build: all
 	./node_modules/.bin/browserify -t debowerify -e src/clamo.js -o target/clamo.js -s Clamo 
 
 testRebuild: all
-	./node_modules/.bin/browserify -t debowerify test/fastft-api-client.spec.js -o target/clamo.spec.js -s Clamo
+	./node_modules/.bin/browserify -d -t debowerify test/fastft-api-client.spec.js -o target/clamo.spec.js -s Clamo
 
 test: all 
-	./node_modules/.bin/browserify -t debowerify test/fastft-api-client.spec.js -o target/clamo.spec.js -s Clamo
+	./node_modules/.bin/browserify -d -t debowerify test/fastft-api-client.spec.js -o target/clamo.spec.js -s Clamo
 	./node_modules/karma/bin/karma start karma.conf.js
 
 dist: test build
