@@ -65,8 +65,9 @@ var Clamo = function () {
                     });
                 })[0]
             };
-        }).catch(function (err) {
+        }, function (err) {
             console.log('Failed clamo search: ', query, p, err);
+            throw err;
         });
     };
    
@@ -88,8 +89,9 @@ var Clamo = function () {
                     return new Post().parse(result.data);
                 })[0]
             };
-        }).catch(function (err) {
+        }, function (err) {
             console.log('Failed clamo post fetch: ', postId, err);
+            throw err;
         });
     };
 
