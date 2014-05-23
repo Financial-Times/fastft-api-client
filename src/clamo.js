@@ -66,7 +66,7 @@ var Clamo = function () {
                 })[0]
             };
         }, function (err) {
-            console.log('Failed clamo search: ', query, p, err);
+            console.debug('Failed clamo search: ', query, p, err);
             throw err;
         });
     };
@@ -90,7 +90,7 @@ var Clamo = function () {
                 })[0]
             };
         }, function (err) {
-            console.log('Failed clamo post fetch: ', postId, err);
+            console.debug('Failed clamo post fetch: ', postId, err);
             throw err;
         });
     };

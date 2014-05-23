@@ -35,17 +35,19 @@ describe('Clamo', function() {
         });
         
         describe('error handling', function () {
+            var success;
 
-
-            it('should log errors returned by the single post service but not catch them', function (done) {
+            beforeEach(function () {
                 jasmine.Ajax.stubRequest('http://clamo.com/api').andReturn({
                     status: 500,
                     responseText: '{"msg":"Malformed API request"}',
                     ok: true
-                });
+                });    
+                success = jasmine.createSpy('success');  
+                spyOn(console, 'debug');         
+            });
 
-
-                var success = jasmine.createSpy('success');
+            it('should log errors returned by the single post service but not catch them', function (done) {
 
                 function checkHandler () {
                     expect(success).not.toHaveBeenCalled();
@@ -54,8 +56,8 @@ describe('Clamo', function() {
 
                 Clamo.getPost(147292)
                     .then(success, function (err) {
-                        var lastLogged = console.log.calls.argsFor(0);
-                        expect(console.log).toHaveBeenCalled();
+                        var lastLogged = console.debug.calls.argsFor(0);
+                        expect(console.debug).toHaveBeenCalled();
                         expect(lastLogged[0]).toBe('Failed clamo post fetch: ');
                         expect(lastLogged[1]).toBe(147292);
                         expect(lastLogged[2].text).toBe('{"msg":"Malformed API request"}');
@@ -67,27 +69,22 @@ describe('Clamo', function() {
             });
 
             it('should log errors returned by the search service but not catch them', function (done) {
-                jasmine.Ajax.stubRequest('http://clamo.com/api').andReturn({
-                    status: 500,
-                    responseText: '{"msg":"Malformed API request"}',
-                    ok: true
-                });
-
-
-                var success = jasmine.createSpy('success');
 
                 function checkHandler () {
                     expect(success).not.toHaveBeenCalled();
                     done();
                 }
 
-                Clamo.search(147292)
+                Clamo.search('test', {
+                    limit: 5,
+                    offset: 8
+                })
                     .then(success, function (err) {
-                        var lastLogged = console.log.calls.argsFor(0);
-                        expect(console.log).toHaveBeenCalled();
+                        var lastLogged = console.debug.calls.argsFor(0);
+                        expect(console.debug).toHaveBeenCalled();
                         expect(lastLogged[0]).toBe('Failed clamo search: ');
-                        expect(lastLogged[1]).toBe('');
-                        expect(lastLogged[2]).toEqual({limit: 10, offset: 0});
+                        expect(lastLogged[1]).toBe('test');
+                        expect(lastLogged[2]).toEqual({limit: 5, offset: 8});
                         expect(lastLogged[3].text).toBe('{"msg":"Malformed API request"}');
 
                         expect(err.text).toBe('{"msg":"Malformed API request"}');
