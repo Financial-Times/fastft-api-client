@@ -3,7 +3,6 @@ var tagsTable = {};
 
 
 function getTag (id, tags) {
-    var tags;
     for (var i = 0, il = tags.length;i<il;i++) {
         if(!tagsTable[tags[i].id]) {
             tagsTable[tags[i].id] = tags[i];
