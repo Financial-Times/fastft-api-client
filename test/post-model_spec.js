@@ -59,16 +59,16 @@ describe('models/post', function() {
                 tags: [
                     {
                         id: 1,
-                        name: 'incorrect'
+                        tag: 'incorrect'
                     },
                     {
                         id: 11,
-                        name: 'correct'
+                        tag: 'correct'
                     }
                 ]
             });
 
-            expect(post.primaryTag.name).toBe('correct');
+            expect(post.primaryTag.tag).toBe('correct');
 
         });
         it('should fail gracefully when no primary tag', function () {
@@ -77,16 +77,31 @@ describe('models/post', function() {
                 tags: [
                     {
                         id: 1,
-                        name: 'incorrect'
+                        tag: 'incorrect'
                     },
                     {
                         id: 11,
-                        name: 'correct'
+                        tag: 'correct'
                     }
                 ]
             });
 
             expect(post.primaryTag).toBe(undefined);
+
+        });
+
+        it('should set a lower case version of the primary tag name', function () {
+            var post = new Post({
+                metadata: {primarytagid: 11},
+                tags: [
+                    {
+                        id: 11,
+                        tag: 'Correct'
+                    }
+                ]
+            });
+
+            expect(post.primaryTag.lowercaseTag).toBe('correct');
 
         });
     
