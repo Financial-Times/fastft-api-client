@@ -153,17 +153,7 @@ describe('Clamo', function() {
 
                         var postBody = JSON.parse(request.data().request[0])[0];
                         expect(postBody.action).toBe('search');
-                        expect(postBody.arguments.outputfields).toEqual({
-                            id: true,
-                            title: true,
-                            content: 'html',
-                            abstract: 'html',
-                            datepublished: true,
-                            shorturl: true,
-                            metadata: true,
-                            tags: 'visibleonly',
-                            authorpseudonym: 'true'
-                        });
+                        expect(postBody.arguments.outputfields).toEqual(require('../outputfields'));
                         done();
                     }
                 );
