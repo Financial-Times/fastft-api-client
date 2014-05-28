@@ -55,20 +55,21 @@ describe('models/post', function() {
 
         it('should be possible to retrieve full details of the primary tag', function () {
             var post = new Post({
-                metadata: {primarytagid: 11},
+                metadata: {primarytagid: '11'}, // using string as this is the real data returned by the api even though it should be a number
                 tags: [
                     {
                         id: 1,
-                        tag: 'incorrect'
+                        tag: 'Incorrect'
                     },
                     {
                         id: 11,
-                        tag: 'correct'
+                        tag: 'Correct'
                     }
                 ]
             });
 
-            expect(post.primaryTag.tag).toBe('correct');
+            expect(post.primaryTag.tag).toBe('Correct');
+            expect(post.primaryTag.lowercaseTag).toBe('correct');
 
         });
         it('should fail gracefully when no primary tag', function () {
@@ -90,21 +91,20 @@ describe('models/post', function() {
 
         });
 
-        it('should set a lower case version of the primary tag name', function () {
+        it('should cache the primary tags in a look up table', function () {
             var post = new Post({
                 metadata: {primarytagid: 11},
                 tags: [
                     {
                         id: 11,
-                        tag: 'Correct'
+                        tag: 'Other'
                     }
                 ]
             });
 
-            expect(post.primaryTag.lowercaseTag).toBe('correct');
+            expect(post.primaryTag.tag).toBe('Correct');
 
         });
-    
     });
 
 });
