@@ -1,13 +1,12 @@
 var oDate = require('o-date');
-var tagsTable = {};
+var primaryTagTable = {};
 
 
 function getTag (id, tags) {
     for (var i = 0, il = tags.length;i<il;i++) {
-        if(!tagsTable[tags[i].id]) {
-            tagsTable[tags[i].id] = tags[i];
-        }
         if (id === tags[i].id) {
+            tags[i].lowercaseTag = tags[i].tag.toLowerCase();
+            primaryTagTable[tags[i].id] = tags[i];
             return tags[i];
         }
     }
@@ -56,7 +55,7 @@ Object.defineProperty(Post.prototype, 'datetimePublished', {
 Object.defineProperty(Post.prototype, 'primaryTag', {
     get: function () {
         if (this.metadata.primarytagid) {
-            return tagsTable[this.metadata.primarytagid] || getTag(this.metadata.primarytagid, this.tags);
+            return primaryTagTable[this.metadata.primarytagid] || getTag(this.metadata.primarytagid, this.tags);
         }
     }
 });
