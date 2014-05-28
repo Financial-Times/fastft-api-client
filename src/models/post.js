@@ -64,13 +64,19 @@ Object.defineProperty(Post.prototype, 'primaryTag', {
 
 Object.defineProperty(Post.prototype, 'attachments', {
     get: function () {
+        
+        var isAnImage = function (mimetype) {
+            return /^image\//.test(mimetype);
+        }
+
+        var fixImagePath = function (path) {
+            return !/^http/.test(path) ? 'http://clamo.ftdata.co.uk/files' + path : path;
+        }
+       
         return this._attachments
             .map(function (attachment) {
-                if (/^image\//.test(attachment.mimetype)) {
-                    path = !/^http/.test(attachment.path) ? 'http://clamo.ftdata.co.uk/files'+attachment.path : attachment.path;
-                    return '<img class="formatted-image" src="'+path+'" />'
-                }
-                return attachment.content;
+                attachment.imgsrc = isAnImage(attachment.mimetype) ? fixImagePath(attachment.path) : attachment.content;
+                return attachment;
             });
     }
 });

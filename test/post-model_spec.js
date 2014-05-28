@@ -93,9 +93,7 @@ describe('models/post', function() {
                     }
                 ]
             });
-
-            expect(post.attachments[0]).toBe(content);
-
+            expect(post.attachments[0].content).toBe(content);
         });
 
         it('should transform attached images to an img tag', function() {
@@ -108,9 +106,19 @@ describe('models/post', function() {
                     }
                 ]
             });
-
-            expect(post.attachments[0]).toBe('<img class="formatted-image" src="http://msfhq.com/wp-content/uploads/2011/06/FT.jpg" />');
-            
+            expect(post.attachments[0].imgsrc).toBe('http://msfhq.com/wp-content/uploads/2011/06/FT.jpg');
+        });
+        
+        it('should fix images with missing HTTP prefixes', function() {
+            var post = new Post({
+                attachments: [
+                    {
+                        'mimetype': 'image/png',
+                        'path': '/FT.jpg',
+                    }
+                ]
+            });
+            expect(post.attachments[0].imgsrc).toBe('http://clamo.ftdata.co.uk/files/FT.jpg');
         });
     });
 
