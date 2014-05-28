@@ -10,17 +10,7 @@ var Clamo = function () {
         httpTimeout = 2000,
         offset = 0,
         limit = 10,
-        outputfields = {
-            id: true,
-            title: true,
-            content: 'html',
-            abstract: 'html',
-            datepublished: true,
-            shorturl: true,
-            metadata: true,
-            tags: 'visibleonly',
-            authorpseudonym: 'true'
-        };
+        outputfields = require('../outputfields');
 
     /**
      * Returns a promise of a HTTP request to the Clamo API
