@@ -26,10 +26,10 @@ Post.prototype.parse = function (obj) {
         self[k] = obj[k];
     });
 
+    // 
     this._datePublished = new Date(0);
-    
-
     this._datePublished.setTime(obj.datepublished * 1000);
+    this._attachments = obj.attachments;
 
     return this;
 };
@@ -57,6 +57,19 @@ Object.defineProperty(Post.prototype, 'primaryTag', {
         if (this.metadata.primarytagid) {
             return primaryTagTable[this.metadata.primarytagid] || getTag(this.metadata.primarytagid, this.tags);
         }
+    }
+});
+
+Object.defineProperty(Post.prototype, 'attachments', {
+    get: function () {
+        return this._attachments
+            .map(function (attachment) {
+                if (/^image\//.test(attachment.mimetype)) {
+                    path = !/^http\//.test(attachment.path) ? 'http://clamo.ftdata.co.uk/files'+attachment.path : attachment.path;
+                    return '<img class="formatted-image" src="'+path+'" />'
+                }
+                return attachment.content;
+            });
     }
 });
 
