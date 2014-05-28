@@ -12,31 +12,7 @@ describe('models/post', function() {
     });
 
 
-	describe('populating with data', function () {
-		
-        it('should expose publicly any properties passed in to constructor', function () {
-            var post = new Post({
-                a: 1,
-                b: 2
-            });
-
-            expect(post.a).toBe(1);
-            expect(post.b).toBe(2);
-        });
-
-        it('should expose publicly any properties passed in to the chainable parse method', function () {
-            var post = new Post();
-            var thing = post.parse({
-                a: 1,
-                b: 2
-            });
-            expect(thing).toBe(post);
-            expect(post.a).toBe(1);
-            expect(post.b).toBe(2);
-        });
-    });
-
-    describe('getters', function () {
+	describe('getters', function () {
 
         it('should be possible to retrieve the date in a variety of formats', function () {
             var date = new Date();
@@ -104,6 +80,37 @@ describe('models/post', function() {
 
             expect(post.primaryTag.tag).toBe('Correct');
 
+        });
+
+        it('should be able to retrieve content from all attachments', function() {
+            var content = '<p class="postattachment"><a href="http://ft.com">World business, finance, and political news from the Financial Times - FT.com</a></p>';
+            var post = new Post({
+                attachments: [
+                    {
+                        'mimetype': 'text/html',
+                        'path': 'http://ft.com',
+                        'content': content
+                    }
+                ]
+            });
+
+            expect(post.attachments[0]).toBe(content);
+
+        });
+
+        it('should transform attached images to an img tag', function() {
+            var post = new Post({
+                attachments: [
+                    {
+                        'mimetype': 'image/jpg',
+                        'path': 'http://msfhq.com/wp-content/uploads/2011/06/FT.jpg',
+                        'content': '<div class="formatted-img" data-src="http://msfhq.com/wp-content/uploads/2011/06/FT.jpg"></div>'
+                    }
+                ]
+            });
+
+            expect(post.attachments[0]).toBe('<img class="formatted-image" src="http://msfhq.com/wp-content/uploads/2011/06/FT.jpg" />');
+            
         });
     });
 
