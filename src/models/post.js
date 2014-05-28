@@ -4,7 +4,7 @@ var primaryTagTable = {};
 
 function getTag (id, tags) {
     for (var i = 0, il = tags.length;i<il;i++) {
-        if (id === tags[i].id) {
+        if (id == tags[i].id) {
             tags[i].lowercaseTag = tags[i].tag.toLowerCase();
             primaryTagTable[tags[i].id] = tags[i];
             return tags[i];
