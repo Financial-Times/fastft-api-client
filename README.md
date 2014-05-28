@@ -71,4 +71,6 @@ To debug tests in the browser run
 
 (Note you will have to run `make testRebuild` too every time you change a file. If you have `karma-cli` installed globally you can use `karma` instead of `./node_modules/karma/bin/karma`)
 
+To update test data from the clamo api run `make refreshtestdata`
+
 

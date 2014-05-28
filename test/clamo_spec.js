@@ -3,9 +3,18 @@
 var Clamo = require('./../main'); 
 var Post = require('./../src/models/post'); 
 
-var fixtures = {
-    getPost: '[{ "status": "ok", "data": { "id": 147292, "title": "RBS stands ..." } }]',
-    firstPage: JSON.stringify(require('./stubs/first-page'))
+var fixtures = { 
+    firstPage: JSON.stringify(require('./stubs/search.json')),
+    getPost: JSON.stringify(require('./stubs/post.json'))//,
+    // nokia: fs('test/stubs/nokia.json', 'utf8'),
+    // notfound: fs('test/stubs/notfound.json', 'utf8')
+};
+
+var testdata = { 
+    firstPage: require('./stubs/search.json')[0].data.results,
+    getPost: require('./stubs/post.json')[0].data//,
+    // nokia: require('../fixtures/nokia.json')[0].data,
+    // notfound: require('../fixtures/notfound.json')
 };
 
 describe('Clamo', function() {
@@ -122,11 +131,11 @@ describe('Clamo', function() {
             });
             it('retrieve a given post', function(done) {
 
-                Clamo.getPost(147292)
+                Clamo.getPost(testdata.getPost.id)
                     .then(function (res) {
                         expect(JSON.parse(res.response.text)[0].status).toBe('ok');
                         expect(res.post.constructor).toBe(Post);
-                        expect(res.post.id).toBe(147292);
+                        expect(res.post.id).toBe(testdata.getPost.id);
                         done();
                     });
             });
@@ -187,14 +196,14 @@ describe('Clamo', function() {
                     });
             });
 
-            it('should return a list of posts and teh original response', function(done) {
+            it('should return a list of posts and the original response', function(done) {
                 Clamo.search()
                     .then(function (res) {
                         expect(JSON.parse(res.response.text)[0].status).toBe('ok');
 
                         expect(res.posts.length).toBe(10);
                         expect(res.posts[0].constructor).toBe(Post);
-                        expect(res.posts[0].id).toBe(156442);
+                        expect(res.posts[0].id).toBe(testdata.firstPage[0].id);
                         done();
                     });
             });

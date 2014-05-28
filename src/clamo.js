@@ -51,7 +51,7 @@ var Clamo = function () {
                 response: response,
                 posts: JSON.parse(response.text).map(function (results) {
                     return results.data.results.map(function (result) {
-                        return new Post().parse(result);
+                        return new Post(result);
                     });
                 })[0]
             };
@@ -76,7 +76,7 @@ var Clamo = function () {
             return {
                 response: response,
                 post: JSON.parse(response.text).map(function (result) {
-                    return new Post().parse(result.data);
+                    return new Post(result.data);
                 })[0]
             };
         }, function (err) {
