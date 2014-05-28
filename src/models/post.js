@@ -75,7 +75,8 @@ Object.defineProperty(Post.prototype, 'attachments', {
        
         return this._attachments
             .map(function (attachment) {
-                attachment.imgsrc = isAnImage(attachment.mimetype) ? fixImagePath(attachment.path) : attachment.content;
+                if (isAnImage(attachment.mimetype))
+                    attachment.imgsrc = fixImagePath(attachment.path);
                 return attachment;
             });
     }
