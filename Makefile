@@ -16,3 +16,6 @@ dist: test build
 	cp target/clamo.js dist/clamo.js
 	./node_modules/.bin/uglifyjs -o dist/clamo.min.js dist/clamo.js
 
+refreshtestdata:
+	bash ./refreshtestdata.sh
+

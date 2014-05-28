@@ -2,10 +2,20 @@
 
 var Clamo = require('./../main'); 
 var Post = require('./../src/models/post'); 
+var fs = require("fs").readFileSync;
 
-var fixtures = {
-    getPost: '[{ "status": "ok", "data": { "id": 147292, "title": "RBS stands ..." } }]',
-    firstPage: JSON.stringify(require('./stubs/first-page'))
+var fixtures = { 
+    firstPage: fs('test/stubs/search.json', 'utf8'),
+    getPost: fs('test/stubs/post.json', 'utf8')//,
+    // nokia: fs('test/stubs/nokia.json', 'utf8'),
+    // notfound: fs('test/stubs/notfound.json', 'utf8')
+};
+
+var testdata = { 
+    firstPage: require('./stubs/search.json')[0].data.results,
+    getPost: require('./stubs/post.json')[0].data//,
+    // nokia: require('../fixtures/nokia.json')[0].data,
+    // notfound: require('../fixtures/notfound.json')
 };
 
 describe('Clamo', function() {
