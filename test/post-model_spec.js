@@ -69,7 +69,7 @@ describe('models/post', function() {
             });
 
             expect(post.primaryTag.tag).toBe('Correct');
-            expect(post.primaryTag.lowercaseTag).toBe('correct');
+            expect(post.primaryTag.classname).toBe('correct');
 
         });
         it('should fail gracefully when no primary tag', function () {
