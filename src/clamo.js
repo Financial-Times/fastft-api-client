@@ -10,7 +10,7 @@ var Clamo = function () {
         httpTimeout = 2000,
         offset = 0,
         limit = 10,
-        outputfields = require('../outputfields');
+        outputfields = require('./outputfields');
 
     /**
      * Returns a promise of a HTTP request to the Clamo API

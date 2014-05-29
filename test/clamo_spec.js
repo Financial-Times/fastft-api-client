@@ -162,7 +162,7 @@ describe('Clamo', function() {
 
                         var postBody = JSON.parse(request.data().request[0])[0];
                         expect(postBody.action).toBe('search');
-                        expect(postBody.arguments.outputfields).toEqual(require('../outputfields'));
+                        expect(postBody.arguments.outputfields).toEqual(require('../src/outputfields'));
                         done();
                     }
                 );

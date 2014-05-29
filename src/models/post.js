@@ -18,18 +18,20 @@ var Post = function (obj) {
 };
 
 Post.prototype.parse = function (obj) {
-   
-    var self = this;
-    // Automatically assign the passed object to properties
-    // of this object
-    Object.keys(obj).forEach(function (k) {
-        self[k] = obj[k];
-    });
+
+    this.id = obj.id;
+    this.title = obj.title;
+    this.content = obj.content;
+    this.abstract = obj.abstract;
+    this.datepublished = obj.datepublished;
+    this.shorturl = obj.shorturl;
+    this.metadata = obj.metadata;
+    this.tags = obj.tags;
+    this.authorpseudonym = obj.authorpseudonym;
 
     this._datePublished = new Date(0);
-    
-
     this._datePublished.setTime(obj.datepublished * 1000);
+    this._attachments = obj.attachments;
 
     return this;
 };
@@ -57,6 +59,27 @@ Object.defineProperty(Post.prototype, 'primaryTag', {
         if (this.metadata.primarytagid) {
             return primaryTagTable[this.metadata.primarytagid] || getTag(this.metadata.primarytagid, this.tags);
         }
+    }
+});
+
+Object.defineProperty(Post.prototype, 'attachments', {
+    get: function () {
+        
+        var isAnImage = function (mimetype) {
+            return /^image\//.test(mimetype);
+        }
+
+        var fixImagePath = function (path) {
+            return !/^http/.test(path) ? 'http://clamo.ftdata.co.uk/files' + path : path;
+        }
+       
+        return this._attachments
+            .map(function (attachment) {
+                if (isAnImage(attachment.mimetype)) {
+                    attachment.imgsrc = fixImagePath(attachment.path);
+                }
+                return attachment;
+            });
     }
 });
 
