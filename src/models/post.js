@@ -31,7 +31,7 @@ Post.prototype.parse = function (obj) {
 
     this._datePublished = new Date(0);
     this._datePublished.setTime(obj.datepublished * 1000);
-    this._attachments = obj.attachments || [];
+    this._attachments = obj.attachments;
 
     return this;
 };

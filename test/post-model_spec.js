@@ -120,6 +120,27 @@ describe('models/post', function() {
             });
             expect(post.attachments[0].imgsrc).toBe('http://clamo.ftdata.co.uk/files/FT.jpg');
         });
+
+        it('should not blow up if attachments isn\'t an image', function() {
+            var post = new Post({
+                attachments: [
+                    {
+                        'mimetype': 'text/html',
+                        'path': 'http://ft.com',
+                        'content': '<p class="postattachment"><a href="http://ft.com">Financial Times</a></p>'
+                    }
+                ]
+            });
+            expect(post.attachments[0].content).toBe('<p class="postattachment"><a href="http://ft.com">Financial Times</a></p>');
+            expect(post.attachments[0].imgsrc).toBe(undefined);
+        });
+
+        it('should not blow up if attachments is empty', function() {
+            var post = new Post({
+                attachments: []
+            });
+            expect(post.attachments.length).toBe([].length);
+        });
     });
 
 });
