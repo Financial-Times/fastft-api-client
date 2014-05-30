@@ -1,18 +1,18 @@
 /*global require,describe,beforeEach,it,expect,spyOn*/
 
-var Clamo = require('./../main'); 
-var Post = require('./../src/models/post'); 
+var Clamo = require('./../../main'); 
+var Post = require('./../../src/models/post'); 
 
 var fixtures = { 
-    firstPage: JSON.stringify(require('./stubs/search.json')),
-    getPost: JSON.stringify(require('./stubs/post.json'))//,
+    firstPage: JSON.stringify(require('../stubs/search.json')),
+    getPost: JSON.stringify(require('../stubs/post.json'))//,
     // nokia: fs('test/stubs/nokia.json', 'utf8'),
     // notfound: fs('test/stubs/notfound.json', 'utf8')
 };
 
 var testdata = { 
-    firstPage: require('./stubs/search.json')[0].data.results,
-    getPost: require('./stubs/post.json')[0].data//,
+    firstPage: require('../stubs/search.json')[0].data.results,
+    getPost: require('../stubs/post.json')[0].data//,
     // nokia: require('../fixtures/nokia.json')[0].data,
     // notfound: require('../fixtures/notfound.json')
 };
@@ -104,6 +104,32 @@ describe('Clamo', function() {
         
         });
 
+        describe('requested fields', function () {
+            var fieldsList;
+
+            beforeEach(function () {
+                fieldsList = Object.keys(require('../../src/outputfields'));
+                jasmine.Ajax.stubRequest('http://clamo.com/api');
+            });
+
+            it('getPost should request the required fields', function () {
+                 Clamo.getPost(147292);
+                 var request = jasmine.Ajax.requests.mostRecent();
+                 var params = JSON.parse(decodeURIComponent(request.params).substr(8));
+                 expect(Object.keys(params[0].arguments.outputfields)).toEqual(fieldsList);
+            });
+
+            it('search should request the required fields', function () {
+                Clamo.search('test', {
+                    limit: 5,
+                    offset: 8
+                });
+                var request = jasmine.Ajax.requests.mostRecent();
+                var params = JSON.parse(decodeURIComponent(request.params).substr(8));
+                expect(Object.keys(params[0].arguments.outputfields)).toEqual(fieldsList);
+            });
+        });
+
         describe(".getPost", function () {
             beforeEach(function () {
                 jasmine.Ajax.stubRequest('http://clamo.com/api').andReturn({
@@ -129,6 +155,8 @@ describe('Clamo', function() {
                     }
                 );
             });
+
+
             it('retrieve a given post', function(done) {
 
                 Clamo.getPost(testdata.getPost.id)
@@ -162,7 +190,7 @@ describe('Clamo', function() {
 
                         var postBody = JSON.parse(request.data().request[0])[0];
                         expect(postBody.action).toBe('search');
-                        expect(postBody.arguments.outputfields).toEqual(require('../src/outputfields'));
+                        expect(postBody.arguments.outputfields).toEqual(require('../../src/outputfields'));
                         done();
                     }
                 );

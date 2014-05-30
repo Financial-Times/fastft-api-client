@@ -1,4 +1,3 @@
-
 var request = require('superagent');
 var superPromise = require('superagent-promises');
 var Post  = require('./models/post');
