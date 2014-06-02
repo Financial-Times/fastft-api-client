@@ -5,16 +5,12 @@ var Post = require('./../../src/models/post');
 
 var fixtures = { 
     firstPage: JSON.stringify(require('../stubs/search.json')),
-    getPost: JSON.stringify(require('../stubs/post.json'))//,
-    // nokia: fs('test/stubs/nokia.json', 'utf8'),
-    // notfound: fs('test/stubs/notfound.json', 'utf8')
+    getPost: JSON.stringify(require('../stubs/post.json'))
 };
 
 var testdata = { 
     firstPage: require('../stubs/search.json')[0].data.results,
-    getPost: require('../stubs/post.json')[0].data//,
-    // nokia: require('../fixtures/nokia.json')[0].data,
-    // notfound: require('../fixtures/notfound.json')
+    getPost: require('../stubs/post.json')[0].data
 };
 
 describe('Clamo', function() {
