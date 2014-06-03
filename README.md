@@ -1,8 +1,10 @@
+[![Build Status](https://travis-ci.org/Financial-Times/fastft-api-client.svg?branch=outputfields-tests)](https://travis-ci.org/Financial-Times/fastft-api-client)
+
 A fastft posts client for the browser or node.js
 
 ## Promises
 
-This module depends on es6 Promises being available as a global. At present this needs polyfilling in most environments
+This module depends on es6 Promises being available as a global. At present this needs polyfilling in most environments. Note that popular promise libraries e.g. Q, Reqwest, don't necessarily conform to the es6 standard
 
 ### node
 
@@ -14,7 +16,7 @@ Then at the start of your application code
 
 ### Browser
 
-Include the [es6-promise-polyfill](http://s3.amazonaws.com/es6-promises/promise-1.0.0.min.js) in the head of your page
+Include the [es6-promise-polyfill](http://s3.amazonaws.com/es6-promises/promise-1.0.0.min.js) or similar in the head of your page
 
 ## API
 

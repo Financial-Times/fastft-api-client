@@ -14,15 +14,15 @@
   "dependencies": {
     "superagent": "https://github.com/Financial-Times/superagent/archive/bower.tar.gz",
     "superagent-promises": "https://github.com/wheresrhys/superagent-promises/archive/master.tar.gz",
-    "o-date": "https://github.com/Financial-Times/o-date/archive/0.4.0.tar.gz",
-    "debowerify": "~0.7.1"
+    "o-date": "https://github.com/Financial-Times/o-date/archive/0.4.0.tar.gz"
   },
   "peerDependencies": {
     "es6-promise": "*"
   },
   "devDependencies": {
+    "debowerify": "~0.7.1",
     "jshint": "2.5.0",
-    "browserify": "*",
+    "browserify": "^3.0.0",
     "karma": "0.12.9",
     "karma-jasmine": "~0.2.0",
     "karma-phantomjs-launcher": "^0.1.4",

@@ -2,7 +2,7 @@
 
 'use strict';
 
-var Post = require('./../src/models/post');
+var Post = require('./../../src/models/post');
 var oDate = require('o-date');
 
 describe('models/post', function() {
