@@ -4,12 +4,12 @@ var Clamo = require('./../../main');
 var Post = require('./../../src/models/post'); 
 
 var fixtures = { 
-    firstPage: JSON.stringify(require('../stubs/search.json')),
+    firstPage: JSON.stringify(require('../stubs/cameron.json')),
     getPost: JSON.stringify(require('../stubs/post.json'))
 };
 
 var testdata = { 
-    firstPage: require('../stubs/search.json')[0].data.results,
+    firstPage: require('../stubs/cameron.json')[0].data.results,
     getPost: require('../stubs/post.json')[0].data
 };
 
