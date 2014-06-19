@@ -20,9 +20,14 @@ Include the [es6-promise-polyfill](http://s3.amazonaws.com/es6-promises/promise-
 
 ## API
 
-### setHost (str)
+### config (str, mixed)
 
-Sets the host name for requests to clamo (may contain `http://` etc if your environment requires it)
+Sets config values:
+
+* `host`  - the host name for requests to clamo (may contain `http://` etc if your environment requires it)
+* `limit`  - the default maximum number of posts to fetch in a search. Defaults to 10, but can be specified on a per-request basis
+* `outputfields` - the fields to return from any clamo request (see src/outputfields.json for the default)
+* `timeout` - timeout threshold for requests. Defaults to no limit
 
 ### getPost (id)
 

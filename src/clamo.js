@@ -2,31 +2,34 @@ var request = require('superagent');
 var superPromise = require('superagent-promises');
 var Post  = require('./models/post');
 var host;
+var opts;
 
 var Clamo = function () {
     
-    var opts = opts || {},
-        httpTimeout = 2000,
-        offset = 0,
-        limit = 10,
-        outputfields = require('./outputfields');
-
+    opts = {
+        outputfields: require('./outputfields'),
+        limit: 10
+    };
+    
     /**
      * Returns a promise of a HTTP request to the Clamo API
      */
     var promiseOfClamo = function (params) {
-        if (!host) {
+        if (!opts.host) {
             throw 'No host specified for clamo api calls';
         }
-        return request
-            .post(host)
+        var req = request
+            .post(opts.host)
             .type('form')
-            .timeout(httpTimeout)
             .use(superPromise)
             .send({
                 request: JSON.stringify([params])
-            })
-            .end();
+            });
+
+        if (opts.timeout) {
+            req.timeout(opts.timeout);
+        }
+        return req.end();
     };
 
     /** API */
@@ -40,9 +43,9 @@ var Clamo = function () {
             action: 'search',
             arguments: {
                 query: query || '',
-                limit: p.limit || limit,
-                offset: p.offset || offset,
-                outputfields: outputfields
+                limit: p.limit || opts.limit,
+                offset: p.offset || 0,
+                outputfields: opts.outputfields
             }
         };
         return promiseOfClamo(params).then(function (response) {
@@ -65,10 +68,10 @@ var Clamo = function () {
      */
     this.getPost = function (postId) {
         var params = {
-            'action': 'getPost',
-            'arguments': {
-                'id': postId,
-                'outputfields': outputfields
+            action: 'getPost',
+            arguments: {
+                id: postId,
+                outputfields: opts.outputfields
             }
         };
         return promiseOfClamo(params).then(function (response) {
@@ -91,8 +94,8 @@ var clamo = new Clamo();
 module.exports = {
     search: clamo.search,
     getPost: clamo.getPost,
-    setHost: function (h) {
-        host = h;
+    config: function (name, val) {
+        opts[name] = val;
     },
     Post: Post
 };

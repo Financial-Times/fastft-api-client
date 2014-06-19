@@ -2,6 +2,7 @@
 
 var Clamo = require('./../../main'); 
 var Post = require('./../../src/models/post'); 
+var superagent = require('superagent');
 
 var fixtures = { 
     firstPage: JSON.stringify(require('../stubs/cameron.json')),
@@ -36,7 +37,7 @@ describe('Clamo', function() {
 	describe("API calls", function () {
 		
         beforeEach(function () {
-            Clamo.setHost('http://clamo.com/api');
+            Clamo.config('host', 'http://clamo.com/api');
         });
         
         describe('error handling', function () {
@@ -49,7 +50,7 @@ describe('Clamo', function() {
                     ok: true
                 });    
                 success = jasmine.createSpy('success');  
-                spyOn(console, 'debug');         
+                spyOn(console, 'error');         
             });
 
             it('should log errors returned by the single post service but not catch them', function (done) {
@@ -61,8 +62,8 @@ describe('Clamo', function() {
 
                 Clamo.getPost(147292)
                     .then(success, function (err) {
-                        var lastLogged = console.debug.calls.argsFor(0);
-                        expect(console.debug).toHaveBeenCalled();
+                        var lastLogged = console.error.calls.argsFor(0);
+                        expect(console.error).toHaveBeenCalled();
                         expect(lastLogged[0]).toBe('Failed clamo post fetch: ');
                         expect(lastLogged[1]).toBe(147292);
                         expect(lastLogged[2].text).toBe('{"msg":"Malformed API request"}');
@@ -85,8 +86,8 @@ describe('Clamo', function() {
                     offset: 8
                 })
                     .then(success, function (err) {
-                        var lastLogged = console.debug.calls.argsFor(0);
-                        expect(console.debug).toHaveBeenCalled();
+                        var lastLogged = console.error.calls.argsFor(0);
+                        expect(console.error).toHaveBeenCalled();
                         expect(lastLogged[0]).toBe('Failed clamo search: ');
                         expect(lastLogged[1]).toBe('test');
                         expect(lastLogged[2]).toEqual({limit: 5, offset: 8});
@@ -234,6 +235,40 @@ describe('Clamo', function() {
             
         });
         
+        describe('configuration', function () {
+            beforeEach(function () {
+                jasmine.Ajax.stubRequest('http://clamo.com/api').andReturn({
+                    status: 200,
+                    responseText: fixtures.firstPage,
+                    ok: true
+                });
+            }); 
+            it('should be possible to configure limit', function (done) {
+                Clamo.config('limit', 2);
+                Clamo.search()
+                    .then(function (res) {
+                        expect(JSON.parse(res.response.req._data.request)[0].arguments.limit).toBe(2);
+                        done();
+                    });
+
+            });
+
+            it('should be possible to configure timeout', function (done) {
+                 Clamo.config('timeout', 50);
+                 spyOn(superagent.Request.prototype, 'timeout');
+                 Clamo.search().then(done);
+                 expect(superagent.Request.prototype.timeout).toHaveBeenCalledWith(50);
+            });
+
+            it('should be possible to configure ouputfields', function () {
+                Clamo.config('outputfields', {ham: 'cheese'});
+                Clamo.search()
+                    .then(function (res) {
+                        expect(JSON.parse(res.response.req._data.request)[0].arguments.outputfields).toEqual({ham: 'cheese'});
+                        done();
+                    });
+            });
+        })
 
 	});
 });

@@ -8,6 +8,10 @@ build: all
 testRebuild: all
 	./node_modules/.bin/browserify -d -t debowerify test/browsertest.js -o target/clamo.spec.js -s Clamo
 
+testchrome: 
+	./node_modules/karma/bin/karma start --browsers Chrome --singleRun false
+
+
 test: all 
 	./node_modules/.bin/browserify -d -t debowerify test/browsertest.js -o target/clamo.spec.js -s Clamo
 	./node_modules/karma/bin/karma start test/karma.conf.js
