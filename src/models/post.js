@@ -24,7 +24,7 @@ Post.prototype.parse = function (obj) {
     this.content = obj.content;
     this.abstract = obj.abstract;
     this.datepublished = obj.datepublished;
-    this.shorturl = obj.shorturl;
+    this._shorturl = obj.shorturl;
     this.metadata = obj.metadata;
     this.tags = obj.tags;
     this.authorpseudonym = obj.authorpseudonym;
@@ -32,13 +32,31 @@ Post.prototype.parse = function (obj) {
     this._datePublished = new Date(0);
     this._datePublished.setTime(obj.datepublished * 1000);
     this._attachments = obj.attachments;
-
+    this.uriEncodeTags();
     return this;
+};
+
+Post.prototype.uriEncodeTags = function () {
+    this.tags && this.tags.forEach(function (tag) {
+        tag.encodedQuery = encodeURIComponent(tag.query);
+    });
 };
 
 Object.defineProperty(Post.prototype, 'datePublishedISO', {
     get: function () {
         return this._datePublished.toISOString();
+    }
+});
+
+Object.defineProperty(Post.prototype, 'encodedTitle', {
+    get: function () {
+        return encodeURIComponent(this.title);
+    }
+});
+
+Object.defineProperty(Post.prototype, 'shorturl', {
+    get: function () {
+        return this._shorturl.replace(/(\r|\n)$/ig, '');
     }
 });
 
@@ -70,7 +88,7 @@ Object.defineProperty(Post.prototype, 'attachments', {
         }
 
         var fixImagePath = function (path) {
-            return !/^http/.test(path) ? 'http://clamo.ftdata.co.uk/files' + path : path;
+            return encodeURI(!/^http/.test(path) ? 'http://clamo.ftdata.co.uk/files' + path : path);
         }
        
         return this._attachments
@@ -82,6 +100,5 @@ Object.defineProperty(Post.prototype, 'attachments', {
             });
     }
 });
-
 
 module.exports = Post;

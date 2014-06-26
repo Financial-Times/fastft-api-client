@@ -48,7 +48,7 @@ describe('models/post', function() {
             expect(post.primaryTag.classname).toBe('correct');
 
         });
-        it('should fail gracefully when no primary tag', function () {
+        it('should fail gracefully when no primary tag exists', function () {
             var post = new Post({
                 metadata: {},
                 tags: [
@@ -82,65 +82,107 @@ describe('models/post', function() {
 
         });
 
-        it('should be able to retrieve content from all attachments', function() {
-            var content = '<p class="postattachment"><a href="http://ft.com">World business, finance, and political news from the Financial Times - FT.com</a></p>';
+        it('should provide uri encoded copies of properties that might be put in html atrtibutes', function () {
             var post = new Post({
-                attachments: [
+                title: 'escapeme /',
+                tags: [
                     {
-                        'mimetype': 'text/html',
-                        'path': 'http://ft.com',
-                        'content': content
+                        id: 1,
+                        tag: 'incorrect',
+                        query: '/ escapeme'
                     }
                 ]
             });
-            expect(post.attachments[0].content).toBe(content);
+            expect(post.encodedTitle).toBe('escapeme%20%2F');
+            expect(post.tags[0].encodedQuery).toBe('%2F%20escapeme');
         });
 
-        it('should transform attached images to an img tag', function() {
+        it('should clean up the shorturl (fixing the stray carriage return)', function () {
+         
             var post = new Post({
-                attachments: [
-                    {
-                        'mimetype': 'image/jpg',
-                        'path': 'http://msfhq.com/wp-content/uploads/2011/06/FT.jpg',
-                        'content': '<div class="formatted-img" data-src="http://msfhq.com/wp-content/uploads/2011/06/FT.jpg"></div>'
-                    }
-                ]
+                shorturl: 'http://thing\r'
             });
-            expect(post.attachments[0].imgsrc).toBe('http://msfhq.com/wp-content/uploads/2011/06/FT.jpg');
-        });
-        
-        it('should fix images with missing HTTP prefixes', function() {
-            var post = new Post({
-                attachments: [
-                    {
-                        'mimetype': 'image/png',
-                        'path': '/FT.jpg',
-                    }
-                ]
-            });
-            expect(post.attachments[0].imgsrc).toBe('http://clamo.ftdata.co.uk/files/FT.jpg');
+            expect(post.shorturl).toBe('http://thing');
         });
 
-        it('should not blow up if attachments isn\'t an image', function() {
-            var post = new Post({
-                attachments: [
-                    {
-                        'mimetype': 'text/html',
-                        'path': 'http://ft.com',
-                        'content': '<p class="postattachment"><a href="http://ft.com">Financial Times</a></p>'
-                    }
-                ]
+
+        describe('attachments', function () {
+
+            it('should be able to retrieve content from all attachments', function() {
+                var content = '<p class="postattachment"><a href="http://ft.com">World business, finance, and political news from the Financial Times - FT.com</a></p>';
+                var post = new Post({
+                    attachments: [
+                        {
+                            'mimetype': 'text/html',
+                            'path': 'http://ft.com',
+                            'content': content
+                        }
+                    ]
+                });
+                expect(post.attachments[0].content).toBe(content);
             });
-            expect(post.attachments[0].content).toBe('<p class="postattachment"><a href="http://ft.com">Financial Times</a></p>');
-            expect(post.attachments[0].imgsrc).toBe(undefined);
+
+            it('should transform attached images to an img tag', function() {
+                var post = new Post({
+                    attachments: [
+                        {
+                            'mimetype': 'image/jpg',
+                            'path': 'http://msfhq.com/wp-content/uploads/2011/06/FT.jpg',
+                            'content': '<div class="formatted-img" data-src="http://msfhq.com/wp-content/uploads/2011/06/FT.jpg"></div>'
+                        }
+                    ]
+                });
+                expect(post.attachments[0].imgsrc).toBe('http://msfhq.com/wp-content/uploads/2011/06/FT.jpg');
+            });
+            
+            it('should fix images with missing HTTP prefixes', function() {
+                var post = new Post({
+                    attachments: [
+                        {
+                            'mimetype': 'image/png',
+                            'path': '/FT.jpg',
+                        }
+                    ]
+                });
+                expect(post.attachments[0].imgsrc).toBe('http://clamo.ftdata.co.uk/files/FT.jpg');
+            });
+
+            it('should encode image uris', function() {
+                var post = new Post({
+                    attachments: [
+                        {
+                            'mimetype': 'image/png',
+                            'path': 'http://msfhq.com/FT image.jpg',
+                        }
+                    ]
+                });
+                expect(post.attachments[0].imgsrc).toBe('http://msfhq.com/FT%20image.jpg');
+            });
+
+            it('should not blow up if attachments isn\'t an image', function() {
+                var post = new Post({
+                    attachments: [
+                        {
+                            'mimetype': 'text/html',
+                            'path': 'http://ft.com',
+                            'content': '<p class="postattachment"><a href="http://ft.com">Financial Times</a></p>'
+                        }
+                    ]
+                });
+                expect(post.attachments[0].content).toBe('<p class="postattachment"><a href="http://ft.com">Financial Times</a></p>');
+                expect(post.attachments[0].imgsrc).toBe(undefined);
+            });
+
+            it('should not blow up if attachments is empty', function() {
+                var post = new Post({
+                    attachments: []
+                });
+                expect(post.attachments.length).toBe([].length);
+            });
+
         });
 
-        it('should not blow up if attachments is empty', function() {
-            var post = new Post({
-                attachments: []
-            });
-            expect(post.attachments.length).toBe([].length);
-        });
+
     });
 
 });
