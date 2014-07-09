@@ -21,6 +21,7 @@ Post.prototype.parse = function (obj) {
 
     this.id = obj.id;
     this.title = obj.title;
+    this.uuid = obj.uuidv3;
     this.content = obj.content;
     this.abstract = obj.abstract;
     this.datepublished = obj.datepublished;

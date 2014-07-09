@@ -14,6 +14,13 @@ describe('models/post', function() {
 
 	describe('getters', function () {
 
+        it('should be possible to get the uuid', function () {
+            var post = new Post({
+                uuidv3: 'bah'
+            });
+            expect(post.uuid).toBe('bah');
+        });
+
         it('should be possible to retrieve the date in a variety of formats', function () {
             var date = new Date();
             var seconds = Math.round(date.getTime()/1000);
