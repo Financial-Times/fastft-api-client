@@ -89,7 +89,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       for (var i = stubs.length - 1; i >= 0; i--) {
         var stub = stubs[i];
         if (stub.matches(url, data)) {
-            return stub;
+          return stub;
         }
       }
     };
@@ -248,11 +248,10 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   function RequestStub(url, stubData) {
     
     var normalizeQuery = function(query) {
-        return query ? query.toString().split('&').sort().join('&') : undefined;
+      return query ? query.toString().split('&').sort().join('&') : undefined;
     };
     
     if (url instanceof RegExp) {
-        console.debug(url);
         this.isRegEx = true;
         this.url = url; 
     } else {
@@ -274,7 +273,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           url = urlSplit[0],
           query = urlSplit[1];
       
-      console.debug(this.isRegEx, this.url, fullUrl);
+      //console.debug(this.isRegEx, this.url, fullUrl);
 
       if (this.isRegEx) {
         return this.url.test(fullUrl);
