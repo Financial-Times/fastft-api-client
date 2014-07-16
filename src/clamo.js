@@ -15,23 +15,24 @@ var Clamo = function () {
      * Returns a promise of a HTTP request to the Clamo API
      */
     var promiseOfClamo = function (params) {
+
         if (!opts.host) {
             throw 'No host specified for clamo api calls';
         }
-        var req = request
-            .post(opts.host)
-            .type('form')
-            .use(superPromise)
-            .send({
-                request: JSON.stringify([params])
-            });
+
+        var req = request.get(opts.host)
+                .query({
+                    request: JSON.stringify([params])
+                })
+                .use(superPromise);
 
         if (opts.timeout) {
             req.timeout(opts.timeout);
         }
+
         return req.end();
     };
-
+    
     /** API */
 
     /**
