@@ -14,6 +14,10 @@ var testdata = {
     getPost: require('../stubs/post.json')[0].data
 };
 
+function getRequestData (req) {
+    return JSON.parse(decodeURIComponent(req.url).split('request=')[1])[0];
+}
+
 describe('Clamo', function() {
 
 	"use strict";
@@ -146,10 +150,9 @@ describe('Clamo', function() {
                         
                         expect(request.url).toContain('http://clamo.com/api?request=%5B');
                         expect(request.method).toBe('GET');
-
-                        //var postBody = JSON.parse(request.data().request[0])[0];
-                        //expect(postBody.action).toBe('getPost');
-                        //expect(postBody.arguments.id).toBe(12345);
+                        var sentData = getRequestData(request);
+                        expect(sentData.action).toBe('getPost');
+                        expect(sentData.arguments.id).toBe(12345);
                         done();
                     }
                 );
@@ -160,9 +163,9 @@ describe('Clamo', function() {
 
                 Clamo.getPost(testdata.getPost.id)
                     .then(function (res) {
-                        //expect(JSON.parse(res.response.text)[0].status).toBe('ok');
-                        //expect(res.post.constructor).toBe(Post);
-                        //expect(res.post.id).toBe(testdata.getPost.id);
+                        expect(JSON.parse(res.response.text)[0].status).toBe('ok');
+                        expect(res.post.constructor).toBe(Post);
+                        expect(res.post.id).toBe(testdata.getPost.id);
                         done();
                     });
             });
@@ -186,10 +189,9 @@ describe('Clamo', function() {
                         
                         expect(request.url).toContain('http://clamo.com/api?request=%5B');
                         expect(request.method).toBe('GET');
-
-                        //var postBody = JSON.parse(request.data().request[0])[0];
-                        //expect(postBody.action).toBe('search');
-                        //expect(postBody.arguments.outputfields).toEqual(require('../../src/outputfields'));
+                        var sentData = getRequestData(request);
+                        expect(sentData.action).toBe('search');
+                        expect(sentData.arguments.outputfields).toEqual(require('../../src/outputfields'));
                         done();
                     }
                 );
@@ -200,10 +202,11 @@ describe('Clamo', function() {
                 Clamo.search()
                     .then(function (res) {
                         var request = jasmine.Ajax.requests.mostRecent();
-                        //var args = JSON.parse(request.data().request[0])[0].arguments;
-                        //expect(args.limit).toBe(10);
-                        //expect(args.offset).toBe(0);
-                        //expect(args.query).toBe('');
+                        var sentData = getRequestData(request);
+                        var args = sentData.arguments;
+                        expect(args.limit).toBe(10);
+                        expect(args.offset).toBe(0);
+                        expect(args.query).toBe('');
                         done();
                     });
             });
@@ -215,10 +218,11 @@ describe('Clamo', function() {
                 })
                     .then(function (res) {
                         var request = jasmine.Ajax.requests.mostRecent();
-                        //var args = JSON.parse(request.data().request[0])[0].arguments;
-                        //expect(args.limit).toBe(30);
-                        //expect(args.offset).toBe(60);
-                        //expect(args.query).toBe('testquery:forstuff');
+                        var sentData = getRequestData(request);
+                        var args = sentData.arguments;
+                        expect(args.limit).toBe(30);
+                        expect(args.offset).toBe(60);
+                        expect(args.query).toBe('testquery:forstuff');
                         done();
                     });
             });
@@ -249,7 +253,7 @@ describe('Clamo', function() {
                 Clamo.config('limit', 2);
                 Clamo.search()
                     .then(function (res) {
-                        // expect(JSON.parse(res.response.req._data.request)[0].arguments.limit).toBe(2);
+                        expect(getRequestData(res.response.req).arguments.limit).toBe(2);
                         done();
                     });
 

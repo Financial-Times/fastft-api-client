@@ -1,5 +1,15 @@
 /*
 
+
+  CUSTOMISED TO MOCK URLS BASED ON REGEX IN ADDITION TO EXACT PATTERNS
+
+
+
+*/
+
+
+/*
+
 Jasmine-Ajax : a set of helpers for testing AJAX requests under the Jasmine
 BDD framework for JavaScript.
 

@@ -15,7 +15,6 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'test/helpers/promise-1.0.0.min.js',
       'test/helpers/*.js',
       'target/*.spec.js'
     ],
