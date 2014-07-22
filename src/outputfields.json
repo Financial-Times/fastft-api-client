@@ -8,5 +8,6 @@
       "metadata": true,
       "tags": "visibleonly",
       "authorpseudonym": true,
-      "attachments": "html"
+      "attachments": "html",
+      "slug": true
 }
