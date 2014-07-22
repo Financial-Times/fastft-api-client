@@ -33,20 +33,11 @@ var Clamo = function () {
             req.timeout(opts.timeout);
         }
 
-        if (opts.latencyReporter) {
-            var start = new Date();
-
-            req = req.end();
-            req.then(function () {
-                opts.latencyReporter((new Date()).getTime() - start.getTime());
-            });
-            
-            return req;
-
-        } else {
-            return req.end();
-        }
-
+        var start = new Date();
+        return req.end().then(function (response) {
+            response.latency = (new Date()).getTime() - start.getTime();
+            return response;
+        });
     };
     
     /** API */

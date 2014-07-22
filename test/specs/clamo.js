@@ -102,13 +102,6 @@ describe('Clamo', function() {
         });
 
         describe('latency reporting', function () {
-            var reporter;
-
-            beforeEach(function () {
-                reporter = jasmine.createSpy('latency reporter');  
-
-                Clamo.config('latencyReporter', reporter);
-            });
 
             it('should be possible to measure request latency for search', function () {
                 jasmine.Ajax.stubRequest('http://clamo.com/api').andReturn({
@@ -119,10 +112,8 @@ describe('Clamo', function() {
                 Clamo.search('test', {
                     limit: 5,
                     offset: 8
-                }).then(function () {
-                    expect(typeof reporter.calls.argsFor(0)[0]).toBe('number');
-                    expect(reporter).toHaveBeenCalled();
-
+                }).then(function (data) {
+                    expect(typeof data.response.latency).toBe('number');
                 });
             });
 
@@ -134,9 +125,8 @@ describe('Clamo', function() {
                 });
                 Clamo
                     .getPost(12345)
-                    .then(function () {
-                        expect(typeof reporter.calls.argsFor(0)[0]).toBe('number');
-                        expect(reporter).toHaveBeenCalled();
+                    .then(function (data) {
+                        expect(typeof data.response.latency).toBe('number');
                     });
             });
 
