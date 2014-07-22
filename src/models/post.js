@@ -28,6 +28,7 @@ Post.prototype.parse = function (obj) {
     this._shorturl = obj.shorturl;
     this.metadata = obj.metadata;
     this.tags = obj.tags;
+    this.slug = obj.slug;
     this.authorpseudonym = obj.authorpseudonym;
 
     this._datePublished = new Date(0);
