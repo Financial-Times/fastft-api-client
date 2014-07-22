@@ -15,9 +15,11 @@ var Clamo = function () {
      * Returns a promise of a HTTP request to the Clamo API
      */
     var promiseOfClamo = function (params) {
+
         if (!opts.host) {
             throw 'No host specified for clamo api calls';
         }
+
         var req = request
             .post(opts.host)
             .type('form')
@@ -26,12 +28,27 @@ var Clamo = function () {
                 request: JSON.stringify([params])
             });
 
+
         if (opts.timeout) {
             req.timeout(opts.timeout);
         }
-        return req.end();
-    };
 
+        if (opts.latencyReporter) {
+            var start = new Date();
+
+            req = req.end();
+            req.then(function () {
+                opts.latencyReporter((new Date()).getTime() - start.getTime());
+            });
+            
+            return req;
+
+        } else {
+            return req.end();
+        }
+
+    };
+    
     /** API */
 
     /**
