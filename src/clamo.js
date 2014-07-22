@@ -26,11 +26,24 @@ var Clamo = function () {
                 })
                 .use(superPromise);
 
+
         if (opts.timeout) {
             req.timeout(opts.timeout);
         }
 
-        return req.end();
+        if (opts.latencyReporter) {
+            var start = new Date();
+
+            req = req.end();
+            req.then(function () {
+                opts.latencyReporter((new Date()).getTime() - start.getTime());
+            });
+            
+            return req;
+
+        } else {
+            return req.end();
+        }
     };
     
     /** API */

@@ -20,14 +20,16 @@
     "es6-promise": "*"
   },
   "devDependencies": {
-    "debowerify": "~0.7.1",
+    "textrequireify": "1.0.0",
+    "debowerify": "0.7.0",
     "jshint": "2.5.0",
     "browserify": "^3.0.0",
-    "karma": "0.12.9",
-    "karma-jasmine": "~0.2.0",
-    "karma-phantomjs-launcher": "^0.1.4",
-    "karma-chrome-launcher": "^0.1.3",
-    "phantomjs": "^1.9.*",
+    "karma-bro": "^0.6.0",
+    "karma": "0.12.3",
+    "karma-jasmine": "0.2.1",
+    "karma-phantomjs-launcher": "0.1.2",
+    "karma-chrome-launcher": "0.1.2",
+    "karma-html-reporter": "0.1.3",
     "uglify-js": "^2.4.*"
   },
   "keywords": [

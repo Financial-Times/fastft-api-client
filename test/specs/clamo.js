@@ -105,6 +105,47 @@ describe('Clamo', function() {
         
         });
 
+        describe('latency reporting', function () {
+            var reporter;
+
+            beforeEach(function () {
+                reporter = jasmine.createSpy('latency reporter');  
+
+                Clamo.config('latencyReporter', reporter);
+            });
+
+            it('should be possible to measure request latency for search', function () {
+                jasmine.Ajax.stubRequest('http://clamo.com/api').andReturn({
+                    status: 200,
+                    responseText: fixtures.firstPage,
+                    ok: true
+                });
+                Clamo.search('test', {
+                    limit: 5,
+                    offset: 8
+                }).then(function () {
+                    expect(typeof reporter.calls.argsFor(0)[0]).toBe('number');
+                    expect(reporter).toHaveBeenCalled();
+
+                });
+            });
+
+            it('should be possible to measure request latency for individual posts', function () {
+                jasmine.Ajax.stubRequest('http://clamo.com/api').andReturn({
+                    status: 200,
+                    responseText: fixtures.getPost,
+                    ok: true
+                });
+                Clamo
+                    .getPost(12345)
+                    .then(function () {
+                        expect(typeof reporter.calls.argsFor(0)[0]).toBe('number');
+                        expect(reporter).toHaveBeenCalled();
+                    });
+            });
+
+        });
+
         describe('requested fields', function () {
             var fieldsList;
 
