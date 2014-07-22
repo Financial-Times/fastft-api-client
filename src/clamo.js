@@ -20,13 +20,11 @@ var Clamo = function () {
             throw 'No host specified for clamo api calls';
         }
 
-        var req = request
-            .post(opts.host)
-            .type('form')
-            .use(superPromise)
-            .send({
-                request: JSON.stringify([params])
-            });
+        var req = request.get(opts.host)
+                .query({
+                    request: JSON.stringify([params])
+                })
+                .use(superPromise);
 
 
         if (opts.timeout) {
