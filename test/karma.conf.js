@@ -15,7 +15,6 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'http://s3.amazonaws.com/es6-promises/promise-1.0.0.min.js',
       'test/helpers/*.js',
       'src/**/*.js',
       'test/specs/**/*.js'

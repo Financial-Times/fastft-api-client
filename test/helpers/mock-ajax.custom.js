@@ -1,5 +1,15 @@
 /*
 
+
+  CUSTOMISED TO MOCK URLS BASED ON REGEX IN ADDITION TO EXACT PATTERNS
+
+
+
+*/
+
+
+/*
+
 Jasmine-Ajax : a set of helpers for testing AJAX requests under the Jasmine
 BDD framework for JavaScript.
 
@@ -246,19 +256,24 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   }
 
   function RequestStub(url, stubData) {
-    var split = url.split('?');
-    this.url = split[0];
-
+    
     var normalizeQuery = function(query) {
-      return query ? query.split('&').sort().join('&') : undefined;
+      return query ? query.toString().split('&').sort().join('&') : undefined;
     };
+    
+    if (url instanceof RegExp) {
+        this.isRegEx = true;
+        this.url = url; 
+    } else {
+        var split = url.split('?');
+        this.url = split[0];
+        this.query = normalizeQuery(split[1]);
+    }
 
-    this.query = normalizeQuery(split[1]);
     this.data = normalizeQuery(stubData);
 
     this.andReturn = function(options) {
       this.status = options.status || 200;
-
       this.contentType = options.contentType;
       this.responseText = options.responseText;
     };
@@ -267,7 +282,14 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       var urlSplit = fullUrl.split('?'),
           url = urlSplit[0],
           query = urlSplit[1];
-      return this.url === url && this.query === normalizeQuery(query) && (!this.data || this.data === normalizeQuery(data));
+      
+      //console.debug(this.isRegEx, this.url, fullUrl);
+
+      if (this.isRegEx) {
+        return this.url.test(fullUrl);
+      } else {
+        return this.url === url && this.query === normalizeQuery(query) && (!this.data || this.data === normalizeQuery(data));
+      }
     };
   }
 
