@@ -271,6 +271,41 @@ describe('Clamo', function() {
             });
             
         });
+
+        describe('request method', function () {
+            it('should use GET by default', function (done) {
+                jasmine.Ajax.stubRequest(/^http:\/\/clamo\.com\/api/).andReturn({
+                    status: 200,
+                    responseText: fixtures.getPost,
+                    ok: true
+                });
+                spyOn(superagent, 'get').and.callThrough();
+                spyOn(superagent, 'post').and.callThrough();
+                Clamo.getPost(147292).then(function () {done()});
+                expect(superagent.get).toHaveBeenCalled();
+                expect(superagent.post).not.toHaveBeenCalled();
+            });
+
+            it('should be possible to configure to use POST', function (done) {
+                Clamo.config('method', 'POST');
+                jasmine.Ajax.stubRequest(/^http:\/\/clamo\.com\/api/).andReturn({
+                    status: 200,
+                    responseText: fixtures.getPost,
+                    ok: true
+                });
+                spyOn(superagent, 'get').and.callThrough();
+                spyOn(superagent, 'post').and.callThrough();
+                Clamo.getPost(147292).then(function (res) {
+                    expect(JSON.parse(res.response.text)[0].status).toBe('ok');
+                    expect(res.post.constructor).toBe(Post);
+                    expect(res.post.id).toBe(testdata.getPost.id);
+                    Clamo.config('method', 'GET');
+                    done();
+                });
+                expect(superagent.post).toHaveBeenCalled();
+                expect(superagent.get).not.toHaveBeenCalled();
+            });
+        });
         
         describe('configuration', function () {
             beforeEach(function () {

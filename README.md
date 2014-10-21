@@ -28,6 +28,7 @@ Sets config values:
 * `limit`  - the default maximum number of posts to fetch in a search. Defaults to 10, but can be specified on a per-request basis
 * `outputfields` - the fields to return from any clamo request (see src/outputfields.json for the default)
 * `timeout` - timeout threshold for requests. Defaults to no limit
+* `method` - request method to use, 'GET' or 'POST', defaulting to 'GET'
 
 ### getPost (id)
 

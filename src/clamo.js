@@ -8,7 +8,8 @@ var Clamo = function () {
     
     opts = {
         outputfields: require('./outputfields'),
-        limit: 10
+        limit: 10,
+        method: 'GET'
     };
     
     /**
@@ -20,22 +21,34 @@ var Clamo = function () {
             throw 'No host specified for clamo api calls';
         }
 
-        var req = request.get(opts.host)
-                .query({
-                    request: JSON.stringify([params])
-                })
-                .use(superPromise);
+        var req,
+            payload = {
+                request: JSON.stringify([params])
+            };
 
+        if (opts.method === 'POST') {
+            req = request
+                .post(opts.host)
+                .type('form')
+                .send(payload);
+        } else if (opts.method === 'GET') {
+            req = request
+                .get(opts.host)
+                .query(payload);
+        }
 
         if (opts.timeout) {
             req.timeout(opts.timeout);
         }
 
         var start = new Date();
-        return req.end().then(function (response) {
-            response.latency = (new Date()).getTime() - start.getTime();
-            return response;
-        });
+        return req
+                .use(superPromise)
+                .end()
+                .then(function (response) {
+                    response.latency = (new Date()).getTime() - start.getTime();
+                    return response;
+                });
     };
     
     /** API */
