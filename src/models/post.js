@@ -1,6 +1,7 @@
+'use strict'
+
 var oDate = require('o-date');
 var primaryTagTable = {};
-
 
 function getTag (id, tags) {
     for (var i = 0, il = tags.length;i<il;i++) {
@@ -12,13 +13,28 @@ function getTag (id, tags) {
     }
 }
 
+function isAnImage (mimetype) {
+    return /^image\//.test(mimetype);
+}
+
+function fixImagePath (path) {
+    return encodeURI(!/^http/.test(path) ? 'http://clamo.ftdata.co.uk/files' + path : path);
+}
+
+function addGetter (name, func) {
+    Object.defineProperty(postProto, name, {
+        get: func
+    });
+}
+
 // Represents a single fastFt blog post 
 var Post = function (obj) {
     obj && this.parse(obj);
 };
 
-Post.prototype.parse = function (obj) {
+var postProto = Post.prototype;
 
+postProto.parse = function (obj) {
     this.id = obj.id;
     this.title = obj.title;
     this.uuid = obj.uuidv3;
@@ -38,69 +54,51 @@ Post.prototype.parse = function (obj) {
     return this;
 };
 
-Post.prototype.uriEncodeTags = function () {
+postProto.uriEncodeTags = function () {
     this.tags && this.tags.forEach(function (tag) {
         tag.encodedQuery = encodeURIComponent(tag.query);
     });
 };
 
-Object.defineProperty(Post.prototype, 'datePublishedISO', {
-    get: function () {
-        return this._datePublished.toISOString();
+addGetter('datePublishedISO', function () {
+    return this._datePublished.toISOString();
+});
+
+addGetter('encodedTitle', function () {
+    return encodeURIComponent(this.title);
+});
+
+addGetter('plainTextAbstract', function () {
+    return this.abstract.replace(/<br\/?>/g, '\n').replace(/<[^>]*>/g, '');
+});
+
+addGetter('shorturl', function () {
+    return this._shorturl.replace(/(\r|\n)$/ig, '');
+});
+
+addGetter('datePublished', function () {
+    return oDate.format(this._datePublished, 'date');
+});
+
+addGetter('datetimePublished', function () {
+    return oDate.format(this._datePublished, 'datetime');
+});
+
+addGetter('primaryTag', function () {
+    if (this.metadata.primarytagid) {
+        return primaryTagTable[this.metadata.primarytagid] || getTag(this.metadata.primarytagid, this.tags);
     }
 });
 
-Object.defineProperty(Post.prototype, 'encodedTitle', {
-    get: function () {
-        return encodeURIComponent(this.title);
-    }
-});
-
-Object.defineProperty(Post.prototype, 'shorturl', {
-    get: function () {
-        return this._shorturl.replace(/(\r|\n)$/ig, '');
-    }
-});
-
-Object.defineProperty(Post.prototype, 'datePublished', {
-    get: function () {
-        return oDate.format(this._datePublished, 'date');
-    }
-});
-
-Object.defineProperty(Post.prototype, 'datetimePublished', {
-    get: function () {
-        return oDate.format(this._datePublished, 'datetime');
-    }
-});
-
-Object.defineProperty(Post.prototype, 'primaryTag', {
-    get: function () {
-        if (this.metadata.primarytagid) {
-            return primaryTagTable[this.metadata.primarytagid] || getTag(this.metadata.primarytagid, this.tags);
-        }
-    }
-});
-
-Object.defineProperty(Post.prototype, 'attachments', {
-    get: function () {
+addGetter('attachments', function () {
         
-        var isAnImage = function (mimetype) {
-            return /^image\//.test(mimetype);
-        }
-
-        var fixImagePath = function (path) {
-            return encodeURI(!/^http/.test(path) ? 'http://clamo.ftdata.co.uk/files' + path : path);
-        }
-       
-        return this._attachments
-            .map(function (attachment) {
-                if (isAnImage(attachment.mimetype)) {
-                    attachment.imgsrc = fixImagePath(attachment.path);
-                }
-                return attachment;
-            });
-    }
+    return this._attachments
+        .map(function (attachment) {
+            if (isAnImage(attachment.mimetype)) {
+                attachment.imgsrc = fixImagePath(attachment.path);
+            }
+            return attachment;
+        });
 });
 
 module.exports = Post;

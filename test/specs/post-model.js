@@ -55,6 +55,17 @@ describe('models/post', function() {
             expect(post.primaryTag.classname).toBe('correct');
 
         });
+
+        it('should be possible to retrieve html and plain text abstracts', function () {
+            var post = new Post({
+                abstract: '<p>abstract<br/><br>abstract</p>'
+            });
+
+            expect(post.abstract).toBe('<p>abstract<br/><br>abstract</p>');
+            expect(post.plainTextAbstract).toBe('abstract\n\nabstract');
+
+        });
+
         it('should fail gracefully when no primary tag exists', function () {
             var post = new Post({
                 metadata: {},
