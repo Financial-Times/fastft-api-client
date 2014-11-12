@@ -15,7 +15,7 @@ var testdata = {
 };
 
 function getRequestData (req) {
-    return JSON.parse(decodeURIComponent(req.url).split('request=')[1])[0];
+   return JSON.parse(decodeURIComponent(req.url).split('request=')[1])[0];
 }
 
 describe('Clamo', function() {
@@ -308,13 +308,32 @@ describe('Clamo', function() {
         });
         
         describe('configuration', function () {
+            
             beforeEach(function () {
                 jasmine.Ajax.stubRequest(/(.*)/).andReturn({
                     status: 200,
                     responseText: fixtures.firstPage,
                     ok: true
                 });
+                Clamo.config('maxAge', undefined); // stop maxAge bleeding in to other tests
             }); 
+            
+            it('should allow the client to specify an acceptable max-age value', function(done) {
+                var roundTo = 27;
+                Clamo.config('maxAge', roundTo);
+                Clamo.search()
+                    .then(function (res) {
+                        var request = jasmine.Ajax.requests.mostRecent();
+                        var maxAge = request.url.match(/maxage=(\d+)/)[1];
+                        expect(maxAge % roundTo).toEqual(0);
+                        expect(request.url).toMatch(/(.*)&maxage=(\d+)/);
+                        done();
+                    })
+                    .then(function (res) {
+                        done();
+                    });
+            });
+            
             it('should be possible to configure limit', function (done) {
                 Clamo.config('limit', 2);
                 Clamo.search()
