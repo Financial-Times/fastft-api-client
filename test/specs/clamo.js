@@ -272,11 +272,6 @@ describe('Clamo', function() {
             
         });
 
-        describe('opts', function () {
-            
-        
-        })
-
         describe('request method', function () {
             it('should use GET by default', function (done) {
                 jasmine.Ajax.stubRequest(/^http:\/\/clamo\.com\/api/).andReturn({
