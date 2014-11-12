@@ -343,7 +343,6 @@ describe('Clamo', function() {
                 Clamo.config('limit', 2);
                 Clamo.search()
                     .then(function (res) {
-                        debugger;
                         expect(getRequestData(res.response.req).arguments.limit).toBe(2);
                         done();
                     });
