@@ -318,13 +318,16 @@ module.exports = function(arr, fn, initial){
   return curr;
 };
 },{}],4:[function(_dereq_,module,exports){
-var promiseEnd,
-    getPromiseEnd = function(nativeEnd) {
+'use strict';
+
+var protoEnd,
+    nativePromiseEnd,
+    getPromiseEnd = function(previousEnd) {
         
-        return promiseEnd = function (success, failure) {
+        return function (success, failure) {
             var self = this,
                 promise = new Promise(function (resolve, reject) {
-                    nativeEnd.call(self, function (error, res) {
+                    previousEnd.call(self, function (error, res) {
                         if (error || !res.ok) {
                             reject(error || res);
                         } else {
@@ -333,7 +336,7 @@ var promiseEnd,
                     });
                 });
 
-            if (success) {
+            if (success || failure) {
                 promise = promise.then(success, failure);
             }
             
@@ -342,7 +345,13 @@ var promiseEnd,
     };
 
 module.exports = function (request) {
-    request.end = promiseEnd || getPromiseEnd(request.end);
+    protoEnd = protoEnd || request.constructor.prototype.end;
+    request.end = request.end === protoEnd ? (nativePromiseEnd || (nativePromiseEnd = getPromiseEnd(protoEnd))) : getPromiseEnd(request.end);
+};
+
+// useful for testing
+module.exports.uncache = function () {
+    nativePromiseEnd = undefined;
 };
 
 },{}],5:[function(_dereq_,module,exports){
@@ -1407,30 +1416,55 @@ var Clamo = function () {
     
     opts = {
         outputfields: _dereq_('./outputfields'),
-        limit: 10
+        limit: 10,
+        method: 'GET',
+        maxAge: undefined
     };
     
     /**
      * Returns a promise of a HTTP request to the Clamo API
      */
     var promiseOfClamo = function (params) {
+
         if (!opts.host) {
             throw 'No host specified for clamo api calls';
         }
-        var req = request
-            .post(opts.host)
-            .type('form')
-            .use(superPromise)
-            .send({
+
+        var req,
+            payload = {
                 request: JSON.stringify([params])
-            });
+            };
+
+        // ... 
+        if (opts.maxAge) {
+            payload.maxage = opts.maxAge * Math.round((Date.now()/1000) / opts.maxAge)
+        }
+
+        if (opts.method === 'POST') {
+            req = request
+                .post(opts.host)
+                .type('form')
+                .send(payload);
+        } else if (opts.method === 'GET') {
+            req = request
+                .get(opts.host)
+                .query(payload);
+        }
 
         if (opts.timeout) {
             req.timeout(opts.timeout);
         }
-        return req.end();
-    };
 
+        var start = new Date();
+        return req
+                .use(superPromise)
+                .end()
+                .then(function (response) {
+                    response.latency = (new Date()).getTime() - start.getTime();
+                    return response;
+                });
+    };
+    
     /** API */
 
     /**
@@ -1500,9 +1534,10 @@ module.exports = {
 };
 
 },{"./../bower_components/superagent-promises/index.js":4,"./../bower_components/superagent/lib/client.js":5,"./models/post":7,"./outputfields":8}],7:[function(_dereq_,module,exports){
+'use strict'
+
 var oDate = _dereq_("./../../bower_components/o-date/main.js");
 var primaryTagTable = {};
-
 
 function getTag (id, tags) {
     for (var i = 0, il = tags.length;i<il;i++) {
@@ -1514,13 +1549,28 @@ function getTag (id, tags) {
     }
 }
 
+function isAnImage (mimetype) {
+    return /^image\//.test(mimetype);
+}
+
+function fixImagePath (path) {
+    return encodeURI(!/^http/.test(path) ? 'http://clamo.ftdata.co.uk/files' + path : path);
+}
+
+function addGetter (name, func) {
+    Object.defineProperty(postProto, name, {
+        get: func
+    });
+}
+
 // Represents a single fastFt blog post 
 var Post = function (obj) {
     obj && this.parse(obj);
 };
 
-Post.prototype.parse = function (obj) {
+var postProto = Post.prototype;
 
+postProto.parse = function (obj) {
     this.id = obj.id;
     this.title = obj.title;
     this.uuid = obj.uuidv3;
@@ -1530,6 +1580,7 @@ Post.prototype.parse = function (obj) {
     this._shorturl = obj.shorturl;
     this.metadata = obj.metadata;
     this.tags = obj.tags;
+    this.slug = obj.slug;
     this.authorpseudonym = obj.authorpseudonym;
 
     this._datePublished = new Date(0);
@@ -1539,69 +1590,51 @@ Post.prototype.parse = function (obj) {
     return this;
 };
 
-Post.prototype.uriEncodeTags = function () {
+postProto.uriEncodeTags = function () {
     this.tags && this.tags.forEach(function (tag) {
         tag.encodedQuery = encodeURIComponent(tag.query);
     });
 };
 
-Object.defineProperty(Post.prototype, 'datePublishedISO', {
-    get: function () {
-        return this._datePublished.toISOString();
+addGetter('datePublishedISO', function () {
+    return this._datePublished.toISOString();
+});
+
+addGetter('encodedTitle', function () {
+    return encodeURIComponent(this.title);
+});
+
+addGetter('plainTextAbstract', function () {
+    return this.abstract.replace(/<br\/?>/g, '\n').replace(/<[^>]*>/g, '');
+});
+
+addGetter('shorturl', function () {
+    return this._shorturl.replace(/(\r|\n)$/ig, '');
+});
+
+addGetter('datePublished', function () {
+    return oDate.format(this._datePublished, 'date');
+});
+
+addGetter('datetimePublished', function () {
+    return oDate.format(this._datePublished, 'datetime');
+});
+
+addGetter('primaryTag', function () {
+    if (this.metadata.primarytagid) {
+        return primaryTagTable[this.metadata.primarytagid] || getTag(this.metadata.primarytagid, this.tags);
     }
 });
 
-Object.defineProperty(Post.prototype, 'encodedTitle', {
-    get: function () {
-        return encodeURIComponent(this.title);
-    }
-});
-
-Object.defineProperty(Post.prototype, 'shorturl', {
-    get: function () {
-        return this._shorturl.replace(/(\r|\n)$/ig, '');
-    }
-});
-
-Object.defineProperty(Post.prototype, 'datePublished', {
-    get: function () {
-        return oDate.format(this._datePublished, 'date');
-    }
-});
-
-Object.defineProperty(Post.prototype, 'datetimePublished', {
-    get: function () {
-        return oDate.format(this._datePublished, 'datetime');
-    }
-});
-
-Object.defineProperty(Post.prototype, 'primaryTag', {
-    get: function () {
-        if (this.metadata.primarytagid) {
-            return primaryTagTable[this.metadata.primarytagid] || getTag(this.metadata.primarytagid, this.tags);
-        }
-    }
-});
-
-Object.defineProperty(Post.prototype, 'attachments', {
-    get: function () {
+addGetter('attachments', function () {
         
-        var isAnImage = function (mimetype) {
-            return /^image\//.test(mimetype);
-        }
-
-        var fixImagePath = function (path) {
-            return encodeURI(!/^http/.test(path) ? 'http://clamo.ftdata.co.uk/files' + path : path);
-        }
-       
-        return this._attachments
-            .map(function (attachment) {
-                if (isAnImage(attachment.mimetype)) {
-                    attachment.imgsrc = fixImagePath(attachment.path);
-                }
-                return attachment;
-            });
-    }
+    return this._attachments
+        .map(function (attachment) {
+            if (isAnImage(attachment.mimetype)) {
+                attachment.imgsrc = fixImagePath(attachment.path);
+            }
+            return attachment;
+        });
 });
 
 module.exports = Post;
@@ -1616,7 +1649,8 @@ module.exports={
       "metadata": true,
       "tags": "visibleonly",
       "authorpseudonym": true,
-      "attachments": "html"
+      "attachments": "html",
+      "slug": true
 }
 },{}]},{},[6])
 (6)

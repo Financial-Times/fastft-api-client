@@ -9,7 +9,8 @@ var Clamo = function () {
     opts = {
         outputfields: require('./outputfields'),
         limit: 10,
-        method: 'GET'
+        method: 'GET',
+        maxAge: undefined
     };
     
     /**
@@ -25,6 +26,11 @@ var Clamo = function () {
             payload = {
                 request: JSON.stringify([params])
             };
+
+        // ... 
+        if (opts.maxAge) {
+            payload.maxage = opts.maxAge * Math.round((Date.now()/1000) / opts.maxAge)
+        }
 
         if (opts.method === 'POST') {
             req = request
