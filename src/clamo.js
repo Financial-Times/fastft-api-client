@@ -1,8 +1,7 @@
 var request = require('superagent');
 var superPromise = require('superagent-promises');
 var Post  = require('./models/post');
-var searchHandler = require('./handlers/search');
-var postHandler = require('./handlers/post');
+var handlers = require('./handlers');
 var host;
 var opts;
 
@@ -75,7 +74,8 @@ var Clamo = function () {
                 outputfields: opts.outputfields
             }
         };
-        return promiseOfClamo(params).then(searchHandler, function (err) {
+
+        return promiseOfClamo(params).then(handlers.search, function (err) {
             console.error('Failed clamo search: ', query, p, err);
             throw err;
         });
@@ -92,7 +92,7 @@ var Clamo = function () {
                 outputfields: opts.outputfields
             }
         };
-        return promiseOfClamo(params).then(postHandler, function (err) {
+        return promiseOfClamo(params).then(handlers.post, function (err) {
             console.error('Failed clamo post fetch: ', postId, err);
             throw err;
         });
