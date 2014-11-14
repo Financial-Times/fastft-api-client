@@ -46,7 +46,7 @@ describe('Clamo mocks', function() {
                 .then(function (real) {
                     expect(helpers.post.calls.count()).toBe(1);
 
-                    mocks.getPost(fixtures.getPost).then(function (fake) {
+                    mocks.getPost(fixtures.getPost)().then(function (fake) {
                         expect(real.post).toEqual(fake.post);
                         done(); 
                     });
@@ -72,7 +72,7 @@ describe('Clamo mocks', function() {
                 .then(function (real) {
                     expect(helpers.search.calls.count()).toBe(1);
 
-                    mocks.search(fixtures.firstPage).then(function (fake) {
+                    mocks.search(fixtures.firstPage)().then(function (fake) {
                         expect(real.posts).toEqual(fake.posts);
                         done(); 
                     });
