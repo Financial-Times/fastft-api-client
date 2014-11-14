@@ -43,13 +43,16 @@ describe('Clamo mocks', function() {
             spyOn(helpers, 'post').and.callThrough();
             Clamo
                 .getPost(12345)
-                .then(function () {
+                .then(function (real) {
                     expect(helpers.post.calls.count()).toBe(1);
 
-                    mocks.getPost(fixtures.getPost);
+                    mocks.getPost(fixtures.getPost).then(function (fake) {
+                        expect(real.post).toEqual(fake.post);
+                        done(); 
+                    });
                     
                     expect(helpers.post.calls.count()).toBe(2);     
-                    done();               
+                                  
                 }
             );
         });           
@@ -66,13 +69,14 @@ describe('Clamo mocks', function() {
             spyOn(helpers, 'search').and.callThrough();
             Clamo
                 .search()
-                .then(function () {
+                .then(function (real) {
                     expect(helpers.search.calls.count()).toBe(1);
 
-                    mocks.search(fixtures.firstPage);
-                    
+                    mocks.search(fixtures.firstPage).then(function (fake) {
+                        expect(real.posts).toEqual(fake.posts);
+                        done(); 
+                    });
                     expect(helpers.search.calls.count()).toBe(2);   
-                    done();
                 }
             );
         });
