@@ -81,4 +81,20 @@ To debug tests in the browser run
 
 To update test data from the clamo api run `make refreshtestdata`
 
+### Mocking this client
 
+If you need to mock this client's communication with the server without having to set up your own request mocker you can use `require('fastft-api-client/mocks')` which provides both `search` and `getPost` mockers which accept json strings (*not* a javascript object) equivalent to one returned from the clamo api and set up functions that return a promise equivalent to one returned by a real clamo request. It uses exactly the same functions to handle the data as those used by the real api client. The only significant difference is that the full http response object won't be available (but if you're mocking then you probably won't need that anyway).
+
+For example: 
+
+```
+    var fastftMocks = require('fastft-api-client/mocks');
+    var fastftClient = require('fastft-api-client');
+
+    it('should render some fastft posts', function () {
+        sinon.stub(fastftClient, 'search', fastftMocks.search('a json string'));
+        sinon.stub(fastftClient, 'getPost', fastftMocks.getPost('a json string'));
+
+        // now run your test     
+    })
+```
