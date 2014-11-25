@@ -162,6 +162,29 @@ describe('Clamo', function() {
                 var params = JSON.parse(decodeURIComponent(qs));
                 expect(Object.keys(params[0].arguments.outputfields)).toEqual(fieldsList);
             });
+
+            it('getPost should request additional fields if requested', function () {
+                Clamo.getPost(147292, {
+                    test: 'elephant'
+                });
+                var request = jasmine.Ajax.requests.mostRecent();
+                var qs = request.url.split('?')[1].split('=')[1];  // extract querystring from url
+                var params = JSON.parse(decodeURIComponent(qs));
+                expect(params[0].arguments.outputfields.test).toBe('elephant');
+            });
+
+            it('search should request additional fields if requested', function () {
+                Clamo.search('test', {
+                    limit: 5,
+                    offset: 8
+                },{
+                    test: 'zebra'
+                });
+                var request = jasmine.Ajax.requests.mostRecent();
+                var qs = request.url.split('?')[1].split('=')[1];  // extract querystring from url
+                var params = JSON.parse(decodeURIComponent(qs));
+                expect(params[0].arguments.outputfields.test).toEqual('zebra');
+            });
         });
 
         describe(".getPost", function () {

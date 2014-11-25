@@ -30,19 +30,21 @@ Sets config values:
 * `timeout` - timeout threshold for requests. Defaults to no limit
 * `method` - request method to use, 'GET' or 'POST', defaulting to 'GET'
 
-### getPost (id)
+### getPost (id, extraFields)
 
 Retrieves a single post from clamo. Returns a promise for an object with two properties
 
  * `response` : The XHR response object received
  * `post`: An instance of a `Post` model (see below for details) 
+ * `extraFields`: object specifying extra fields to request from clamo for a single request. If a field already exists  in either the default config or the config for the clamo instance these will be overridden for this request only.
 
-### search (query, params)
+### search (query, params, extraFields)
 
 Retrieves posts matching the given query, ordered by most recent first. Accepts two parameters
 
  * `query`: A string conforming to clamo's query syntax e.g. `location: London`. Defaults to ''
  * `params`: An object containing two properties - `limit` and `offset` - which enable pagination of results. `limit` defaults to 10 and `offset` to 0
+ * `extraFields`: object specifying extra fields to request from clamo for a single request. If a field already exists  in either the default config or the config for the clamo instance these will be overridden for this request only.
 
 Returns a promise for an object with two properties
 
