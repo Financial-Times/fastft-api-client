@@ -13,6 +13,18 @@ var Clamo = function () {
         method: 'GET',
         maxAge: undefined
     };
+
+    var setOutputFields = function (extraFields) {
+        if (!extraFields) {
+            return opts.outputfields;
+        } else {
+            var fields = JSON.parse(JSON.stringify(opts.outputfields));
+            Object.keys(extraFields).forEach(function (key) {
+                fields[key] = extraFields[key];
+            });
+            return fields;
+        }
+    };
     
     /**
      * Returns a promise of a HTTP request to the Clamo API
@@ -28,9 +40,8 @@ var Clamo = function () {
                 request: JSON.stringify([params])
             };
 
-        // ... 
         if (opts.maxAge) {
-            payload.maxage = opts.maxAge * Math.round((Date.now()/1000) / opts.maxAge)
+            payload.maxage = opts.maxAge * Math.round((Date.now()/1000) / opts.maxAge);
         }
 
         if (opts.method === 'POST') {
@@ -63,7 +74,7 @@ var Clamo = function () {
     /**
      * Retrieves a sequence of posts from Clamo  
      */
-    this.search = function (query, p) { // TODO p is optional
+    this.search = function (query, p, extraFields) {
         p = p || {};
         var params = {
             action: 'search',
@@ -71,7 +82,7 @@ var Clamo = function () {
                 query: query || '',
                 limit: p.limit || opts.limit,
                 offset: p.offset || 0,
-                outputfields: opts.outputfields
+                outputfields: setOutputFields(extraFields)
             }
         };
 
@@ -84,12 +95,12 @@ var Clamo = function () {
     /**
      * Retrieves a single post from a Clamo post id
      */
-    this.getPost = function (postId) {
+    this.getPost = function (postId, extraFields) {
         var params = {
             action: 'getPost',
             arguments: {
                 id: postId,
-                outputfields: opts.outputfields
+                outputfields: setOutputFields(extraFields)
             }
         };
         return promiseOfClamo(params).then(handlers.post, function (err) {
