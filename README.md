@@ -1,3 +1,5 @@
+**API no longer exists and this library is deprecated**
+
 [![Build Status](https://travis-ci.org/Financial-Times/fastft-api-client.svg?branch=outputfields-tests)](https://travis-ci.org/Financial-Times/fastft-api-client)
 
 A fastft posts client for the browser or node.js
